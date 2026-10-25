@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f6f5c">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Viaje">
+<title>Seúl, Kioto y Tokio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+ .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { position: absolute; left: 0; top: 0; } .leaflet-container { overflow: hidden; } .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow { -webkit-user-select: none; -moz-user-select: none; user-select: none; -webkit-user-drag: none; } .leaflet-tile::selection { background: transparent; } .leaflet-safari .leaflet-tile { image-rendering: -webkit-optimize-contrast; } .leaflet-safari .leaflet-tile-container { width: 1600px; height: 1600px; -webkit-transform-origin: 0 0; } .leaflet-marker-icon, .leaflet-marker-shadow { display: block; } .leaflet-container .leaflet-overlay-pane svg { max-width: none !important; max-height: none !important; } .leaflet-container .leaflet-marker-pane img, .leaflet-container .leaflet-shadow-pane img, .leaflet-container .leaflet-tile-pane img, .leaflet-container img.leaflet-image-layer, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; width: auto; padding: 0; } .leaflet-container img.leaflet-tile { mix-blend-mode: plus-lighter; } .leaflet-container.leaflet-touch-zoom { -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; } .leaflet-container.leaflet-touch-drag { -ms-touch-action: pinch-zoom; touch-action: none; touch-action: pinch-zoom; } .leaflet-container.leaflet-touch-drag.leaflet-touch-zoom { -ms-touch-action: none; touch-action: none; } .leaflet-container { -webkit-tap-highlight-color: transparent; } .leaflet-container a { -webkit-tap-highlight-color: rgba(51, 181, 229, 0.4); } .leaflet-tile { filter: inherit; visibility: hidden; } .leaflet-tile-loaded { visibility: inherit; } .leaflet-zoom-box { width: 0; height: 0; -moz-box-sizing: border-box; box-sizing: border-box; z-index: 800; } .leaflet-overlay-pane svg { -moz-user-select: none; } .leaflet-pane { z-index: 400; } .leaflet-tile-pane { z-index: 200; } .leaflet-overlay-pane { z-index: 400; } .leaflet-shadow-pane { z-index: 500; } .leaflet-marker-pane { z-index: 600; } .leaflet-tooltip-pane { z-index: 650; } .leaflet-popup-pane { z-index: 700; } .leaflet-map-pane canvas { z-index: 100; } .leaflet-map-pane svg { z-index: 200; } .leaflet-vml-shape { width: 1px; height: 1px; } .lvml { display: inline-block; position: absolute; } .leaflet-control { position: relative; z-index: 800; pointer-events: visiblePainted; pointer-events: auto; } .leaflet-top, .leaflet-bottom { position: absolute; z-index: 1000; pointer-events: none; } .leaflet-top { top: 0; } .leaflet-right { right: 0; } .leaflet-bottom { bottom: 0; } .leaflet-left { left: 0; } .leaflet-control { float: left; clear: both; } .leaflet-right .leaflet-control { float: right; } .leaflet-top .leaflet-control { margin-top: 10px; } .leaflet-bottom .leaflet-control { margin-bottom: 10px; } .leaflet-left .leaflet-control { margin-left: 10px; } .leaflet-right .leaflet-control { margin-right: 10px; } .leaflet-fade-anim .leaflet-popup { opacity: 0; -webkit-transition: opacity 0.2s linear; -moz-transition: opacity 0.2s linear; transition: opacity 0.2s linear; } .leaflet-fade-anim .leaflet-map-pane .leaflet-popup { opacity: 1; } .leaflet-zoom-animated { -webkit-transform-origin: 0 0; -ms-transform-origin: 0 0; transform-origin: 0 0; } svg.leaflet-zoom-animated { will-change: transform; } .leaflet-zoom-anim .leaflet-zoom-animated { -webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1); -moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1); transition: transform 0.25s cubic-bezier(0,0,0.25,1); } .leaflet-zoom-anim .leaflet-tile, .leaflet-pan-anim .leaflet-tile { -webkit-transition: none; -moz-transition: none; transition: none; } .leaflet-zoom-anim .leaflet-zoom-hide { visibility: hidden; } .leaflet-interactive { cursor: pointer; } .leaflet-grab { cursor: -webkit-grab; cursor: -moz-grab; cursor: grab; } .leaflet-crosshair, .leaflet-crosshair .leaflet-interactive { cursor: crosshair; } .leaflet-popup-pane, .leaflet-control { cursor: auto; } .leaflet-dragging .leaflet-grab, .leaflet-dragging .leaflet-grab .leaflet-interactive, .leaflet-dragging .leaflet-marker-draggable { cursor: move; cursor: -webkit-grabbing; cursor: -moz-grabbing; cursor: grabbing; } .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-image-layer, .leaflet-pane > svg path, .leaflet-tile-container { pointer-events: none; } .leaflet-marker-icon.leaflet-interactive, .leaflet-image-layer.leaflet-interactive, .leaflet-pane > svg path.leaflet-interactive, svg.leaflet-image-layer.leaflet-interactive path { pointer-events: visiblePainted; pointer-events: auto; } .leaflet-container { background: #ddd; outline-offset: 1px; } .leaflet-container a { color: #0078A8; } .leaflet-zoom-box { border: 2px dotted #38f; background: rgba(255,255,255,0.5); } .leaflet-container { font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; font-size: 12px; font-size: 0.75rem; line-height: 1.5; } .leaflet-bar { box-shadow: 0 1px 5px rgba(0,0,0,0.65); border-radius: 4px; } .leaflet-bar a { background-color: #fff; border-bottom: 1px solid #ccc; width: 26px; height: 26px; line-height: 26px; display: block; text-align: center; text-decoration: none; color: black; } .leaflet-bar a, .leaflet-control-layers-toggle { background-position: 50% 50%; background-repeat: no-repeat; display: block; } .leaflet-bar a:hover, .leaflet-bar a:focus { background-color: #f4f4f4; } .leaflet-bar a:first-child { border-top-left-radius: 4px; border-top-right-radius: 4px; } .leaflet-bar a:last-child { border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-bottom: none; } .leaflet-bar a.leaflet-disabled { cursor: default; background-color: #f4f4f4; color: #bbb; } .leaflet-touch .leaflet-bar a { width: 30px; height: 30px; line-height: 30px; } .leaflet-touch .leaflet-bar a:first-child { border-top-left-radius: 2px; border-top-right-radius: 2px; } .leaflet-touch .leaflet-bar a:last-child { border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; } .leaflet-control-zoom-in, .leaflet-control-zoom-out { font: bold 18px 'Lucida Console', Monaco, monospace; text-indent: 1px; } .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out { font-size: 22px; } .leaflet-control-layers { box-shadow: 0 1px 5px rgba(0,0,0,0.4); background: #fff; border-radius: 5px; } .leaflet-control-layers-toggle { width: 36px; height: 36px; } .leaflet-retina .leaflet-control-layers-toggle { background-size: 26px 26px; } .leaflet-touch .leaflet-control-layers-toggle { width: 44px; height: 44px; } .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle { display: none; } .leaflet-control-layers-expanded .leaflet-control-layers-list { display: block; position: relative; } .leaflet-control-layers-expanded { padding: 6px 10px 6px 6px; color: #333; background: #fff; } .leaflet-control-layers-scrollbar { overflow-y: scroll; overflow-x: hidden; padding-right: 5px; } .leaflet-control-layers-selector { margin-top: 2px; position: relative; top: 1px; } .leaflet-control-layers label { display: block; font-size: 13px; font-size: 1.08333em; } .leaflet-control-layers-separator { height: 0; border-top: 1px solid #ddd; margin: 5px -10px 5px -6px; } .leaflet-default-icon-path { } .leaflet-container .leaflet-control-attribution { background: #fff; background: rgba(255, 255, 255, 0.8); margin: 0; } .leaflet-control-attribution, .leaflet-control-scale-line { padding: 0 5px; color: #333; line-height: 1.4; } .leaflet-control-attribution a { text-decoration: none; } .leaflet-control-attribution a:hover, .leaflet-control-attribution a:focus { text-decoration: underline; } .leaflet-attribution-flag { display: inline !important; vertical-align: baseline !important; width: 1em; height: 0.6669em; } .leaflet-left .leaflet-control-scale { margin-left: 5px; } .leaflet-bottom .leaflet-control-scale { margin-bottom: 5px; } .leaflet-control-scale-line { border: 2px solid #777; border-top: none; line-height: 1.1; padding: 2px 5px 1px; white-space: nowrap; -moz-box-sizing: border-box; box-sizing: border-box; background: rgba(255, 255, 255, 0.8); text-shadow: 1px 1px #fff; } .leaflet-control-scale-line:not(:first-child) { border-top: 2px solid #777; border-bottom: none; margin-top: -2px; } .leaflet-control-scale-line:not(:first-child):not(:last-child) { border-bottom: 2px solid #777; } .leaflet-touch .leaflet-control-attribution, .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { box-shadow: none; } .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar { border: 2px solid rgba(0,0,0,0.2); background-clip: padding-box; } .leaflet-popup { position: absolute; text-align: center; margin-bottom: 20px; } .leaflet-popup-content-wrapper { padding: 1px; text-align: left; border-radius: 12px; } .leaflet-popup-content { margin: 13px 24px 13px 20px; line-height: 1.3; font-size: 13px; font-size: 1.08333em; min-height: 1px; } .leaflet-popup-content p { margin: 17px 0; margin: 1.3em 0; } .leaflet-popup-tip-container { width: 40px; height: 20px; position: absolute; left: 50%; margin-top: -1px; margin-left: -20px; overflow: hidden; pointer-events: none; } .leaflet-popup-tip { width: 17px; height: 17px; padding: 1px; margin: -10px auto 0; pointer-events: auto; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: white; color: #333; box-shadow: 0 3px 14px rgba(0,0,0,0.4); } .leaflet-container a.leaflet-popup-close-button { position: absolute; top: 0; right: 0; border: none; text-align: center; width: 24px; height: 24px; font: 16px/24px Tahoma, Verdana, sans-serif; color: #757575; text-decoration: none; background: transparent; } .leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus { color: #585858; } .leaflet-popup-scrolled { overflow: auto; } .leaflet-oldie .leaflet-popup-content-wrapper { -ms-zoom: 1; } .leaflet-oldie .leaflet-popup-tip { width: 24px; margin: 0 auto; -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)"; filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678); } .leaflet-oldie .leaflet-control-zoom, .leaflet-oldie .leaflet-control-layers, .leaflet-oldie .leaflet-popup-content-wrapper, .leaflet-oldie .leaflet-popup-tip { border: 1px solid #999; } .leaflet-div-icon { background: #fff; border: 1px solid #666; } .leaflet-tooltip { position: absolute; padding: 6px; background-color: #fff; border: 1px solid #fff; border-radius: 3px; color: #222; white-space: nowrap; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; pointer-events: none; box-shadow: 0 1px 3px rgba(0,0,0,0.4); } .leaflet-tooltip.leaflet-interactive { cursor: pointer; pointer-events: auto; } .leaflet-tooltip-top:before, .leaflet-tooltip-bottom:before, .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { position: absolute; pointer-events: none; border: 6px solid transparent; background: transparent; content: ""; } .leaflet-tooltip-bottom { margin-top: 6px; } .leaflet-tooltip-top { margin-top: -6px; } .leaflet-tooltip-bottom:before, .leaflet-tooltip-top:before { left: 50%; margin-left: -6px; } .leaflet-tooltip-top:before { bottom: 0; margin-bottom: -12px; border-top-color: #fff; } .leaflet-tooltip-bottom:before { top: 0; margin-top: -12px; margin-left: -6px; border-bottom-color: #fff; } .leaflet-tooltip-left { margin-left: -6px; } .leaflet-tooltip-right { margin-left: 6px; } .leaflet-tooltip-left:before, .leaflet-tooltip-right:before { top: 50%; margin-top: -6px; } .leaflet-tooltip-left:before { right: 0; margin-right: -12px; border-left-color: #fff; } .leaflet-tooltip-right:before { left: 0; margin-left: -12px; border-right-color: #fff; } @media print { .leaflet-control { -webkit-print-color-adjust: exact; print-color-adjust: exact; } } 
+</style>
+<style>
+/* Layout: phone = one column (header, "hoy" card, map, stops). Unfolded foldable / tablet = map pane left, itinerary right.
+   Dual-screen = each pane fills one screen, split at the hinge. Dancheong accents over celadon neutrals. */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#17212C; --muted:#5A6672; --line:#DCE3E1; --soft:#EAF0EE;
+  --map-bg:#EEF1EE; --accent:#1E6E63; --accent-soft:#DDEEEA; --on-accent:#FFFFFF;
+  --d-sat:#5A6672; --d-sun:#A06A00; --d-mon:#B4372E; --d-tue:#2C5BB8; --d-wed:#2E7D5B; --d-thu:#8A4FB5; --d-fri:#0E7490; --d-fri2:#BE185D; --d-sat2:#4D7C0F; --d-sun2:#1D4ED8; --d-mon2:#5A6672;
+  --warn-bg:#FFF4DC; --warn-ink:#7A5200; --now:#0F766E;
+  --tile-filter:saturate(.6) contrast(.94) brightness(1.04);
+  --f-display:"Gowun Batang","Apple SD Gothic Neo","Noto Serif KR",Georgia,serif;
+  --f-body:"Figtree","Apple SD Gothic Neo","Hiragino Sans","Malgun Gothic",system-ui,-apple-system,sans-serif;
+  --hdr:150px; --gut:max(16px,env(safe-area-inset-left,0px)); --gutr:max(16px,env(safe-area-inset-right,0px));
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151C; --surface:#17202A; --ink:#E7ECEF; --muted:#9AA6B1; --line:#283440; --soft:#1C2731; --map-bg:#1A2129;
+  --accent:#62C2B2; --accent-soft:#183531; --on-accent:#0F151C;
+  --d-sat:#9AA6B1; --d-sun:#E2AA3C; --d-mon:#E36A5F; --d-tue:#7198EA; --d-wed:#5CC08E; --d-thu:#B58AE0; --d-fri:#4CC3D9; --d-fri2:#F06BA8; --d-sat2:#9BCB4E; --d-sun2:#7AA2F7; --d-mon2:#9AA6B1;
+  --warn-bg:#33290F; --warn-ink:#F1CF83; --now:#5FD3C4;
+  --tile-filter:invert(1) hue-rotate(180deg) saturate(.45) brightness(.85) contrast(.92); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151C; --surface:#17202A; --ink:#E7ECEF; --muted:#9AA6B1; --line:#283440; --soft:#1C2731; --map-bg:#1A2129;
+  --accent:#62C2B2; --accent-soft:#183531; --on-accent:#0F151C;
+  --d-sat:#9AA6B1; --d-sun:#E2AA3C; --d-mon:#E36A5F; --d-tue:#7198EA; --d-wed:#5CC08E; --d-thu:#B58AE0; --d-fri:#4CC3D9; --d-fri2:#F06BA8; --d-sat2:#9BCB4E; --d-sun2:#7AA2F7; --d-mon2:#9AA6B1;
+  --warn-bg:#33290F; --warn-ink:#F1CF83; --now:#5FD3C4;
+  --tile-filter:invert(1) hue-rotate(180deg) saturate(.45) brightness(.85) contrast(.92); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0;padding-block:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:1001;background:var(--bg)}
+button{font:inherit;color:inherit}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- app frame ---------- */
+.app{display:flex;flex-direction:column;padding-left:var(--gut);padding-right:var(--gutr);padding-block:0 32px;max-width:1500px;margin:0 auto}
+.content{display:contents}
+.title-row{order:0;padding-top:max(12px,env(safe-area-inset-top,0px))}
+.top{order:0}
+.now-wrap{order:1}
+.map-pane{order:2}
+.rest{order:3}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;background:var(--bg);padding-block:8px 10px;border-bottom:1px solid var(--line)}
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{font-family:var(--f-display);font-size:clamp(1.15rem,5vw,1.4rem);margin:0;font-weight:700;line-height:1.2}
+.progress{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.progress svg{width:22px;height:22px}
+.cities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;background:var(--soft);padding:4px;border-radius:12px}
+.city{border:0;background:transparent;border-radius:9px;padding:6px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:0}
+.city b{font-weight:700;font-size:.9rem}
+.city small{font-size:.68rem;color:var(--muted);white-space:nowrap}
+.city[aria-selected="true"]{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.city[aria-selected="true"] small{color:var(--accent)}
+.days{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px;margin-top:8px}
+.day{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:5px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:0;position:relative}
+.day b{font-size:.86rem;font-weight:700;white-space:nowrap}
+.day small{font-size:.66rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.day b::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:5px;vertical-align:2px}
+.day[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.day[aria-selected="true"] small{color:var(--bg);opacity:.75}
+.day.today::after{content:"HOY";position:absolute;top:-7px;right:4px;font-size:.55rem;font-weight:800;letter-spacing:.06em;background:var(--now);color:var(--bg);padding:1px 4px;border-radius:5px}
+
+/* now card */
+.now-wrap{padding-top:12px}
+.now{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:6px}
+.now .eyebrow{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--now);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.now .eyebrow .clock{color:var(--muted);font-variant-numeric:tabular-nums}
+.now .big{font-family:var(--f-display);font-size:1.15rem;font-weight:700;line-height:1.25}
+.now .line{font-size:.88rem;color:var(--muted)}
+.now .line strong{color:var(--ink)}
+.now .actions{margin-top:4px}
+
+/* map */
+.map-pane{padding-top:12px}
+.map-box{position:relative;height:clamp(300px,46vh,520px);border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--map-bg)}
+#map{position:absolute;inset:0;background:var(--map-bg);font-family:var(--f-body)}
+#map .leaflet-tile-pane{filter:var(--tile-filter)}
+#map img.leaflet-tile{outline:1px solid transparent}
+.map-status{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:500;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.75rem;color:var(--muted);white-space:nowrap}
+.map-tools{position:absolute;right:10px;top:10px;z-index:500;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.map-btn svg{width:15px;height:15px}
+.map-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .78rem var(--f-body);padding:8px 11px;border-radius:10px;cursor:pointer;box-shadow:0 1px 4px rgb(0 0 0 / .12);text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:36px}
+.leaflet-control-zoom{border:1px solid var(--line)!important;box-shadow:0 1px 4px rgb(0 0 0 / .12)!important;border-radius:10px!important;overflow:hidden}
+.leaflet-control-zoom a{background:var(--surface)!important;color:var(--ink)!important;border-color:var(--line)!important;width:36px!important;height:36px!important;line-height:36px!important}
+.leaflet-container .leaflet-control-attribution{background:color-mix(in srgb,var(--surface) 80%,transparent);color:var(--muted);font-size:10px}
+.leaflet-control-attribution a{color:var(--muted)}
+.pin{display:flex;align-items:center;gap:5px;white-space:nowrap;pointer-events:auto;position:relative}
+.pin b{width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:var(--c);color:#fff;font:700 13px/28px var(--f-body);text-align:center;border:2.5px solid var(--surface);box-shadow:0 2px 6px rgb(0 0 0 / .3);transition:transform .15s}
+.pin span{font:600 12px var(--f-body);color:var(--ink);background:color-mix(in srgb,var(--surface) 90%,transparent);padding:2px 7px;border-radius:7px;box-shadow:0 1px 3px rgb(0 0 0 / .15)}
+.pin.left span{position:absolute;right:34px;top:50%;transform:translateY(-50%)}
+.pin.sel b{transform:scale(1.25)}
+.pin.sel span{background:var(--ink);color:var(--surface)}
+.pin.next b{box-shadow:0 0 0 4px color-mix(in srgb,var(--now) 45%,transparent),0 2px 6px rgb(0 0 0 / .3)}
+.pin.done b{opacity:.5}
+.area-label{font:700 11px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap;text-shadow:0 0 3px var(--map-bg),0 0 3px var(--map-bg),0 0 3px var(--map-bg);pointer-events:none}
+.area-label.water{color:#3D7FA0;letter-spacing:.08em;text-transform:none;font-style:italic;font-size:12px}
+.zoom-low .area-label{display:none}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--surface);color:var(--ink);box-shadow:0 4px 16px rgb(0 0 0 / .2)}
+.leaflet-popup-content-wrapper{border-radius:12px}
+.leaflet-popup-content{margin:12px 14px;font:14px/1.4 var(--f-body);min-width:190px}
+.pop-time{font-weight:700;font-size:.78rem;color:var(--c)}
+.pop-name{font-weight:700;font-size:1rem;margin-top:1px}
+.pop-ko{font-family:var(--f-display);color:var(--muted)}
+.pop-meta{color:var(--muted);font-size:.8rem;margin-top:4px}
+.pop-actions{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.leaflet-container a.btn{color:var(--ink)}
+.leaflet-container a.btn.primary{color:var(--on-accent)}
+
+/* day + stops */
+.day-head{margin-top:20px;display:flex;flex-direction:column;gap:4px}
+.day-head .eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--c)}
+.day-head h2{font-family:var(--f-display);font-size:1.3rem;margin:0;text-wrap:balance;line-height:1.25}
+.day-head p{margin:0;color:var(--muted);font-size:.9rem;max-width:62ch}
+.note{margin-top:10px;background:var(--warn-bg);color:var(--warn-ink);border-radius:10px;padding:9px 12px;font-size:.86rem}
+.daycost{margin-top:10px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;align-items:baseline;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:.84rem}
+.daycost .k{color:var(--muted)}
+.daycost strong{font-variant-numeric:tabular-nums}
+.usd{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.stops{list-style:none;margin:14px 0 0;padding:0}
+.stop{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;scroll-margin-top:calc(var(--hdr) + 12px)}
+.rail{display:flex;flex-direction:column;align-items:center}
+.num{width:30px;height:30px;border-radius:50%;background:var(--c);color:#fff;font:700 .85rem var(--f-body);display:grid;place-items:center;flex:0 0 auto;cursor:pointer;border:0;padding:0}
+.stop.rest .num{background:var(--surface);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
+.rail::after{content:"";flex:1;width:2px;background:var(--line);margin-top:4px}
+.stop:last-child .rail::after{display:none}
+.card{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s}
+.stop.rest .card{background:transparent;border-style:dashed}
+.stop.sel .card{border-color:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent)}
+.stop.next .card{border-color:var(--now)}
+.stop.done .card{opacity:.6}
+.time{font-variant-numeric:tabular-nums;font-weight:700;font-size:.82rem;color:var(--c);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;font-weight:800;padding:1px 6px;border-radius:5px;background:var(--soft);color:var(--muted)}
+.tag.next{background:var(--now);color:var(--bg)}
+.card h3{margin:2px 0 0;font-size:1.05rem;line-height:1.3}
+.native{font-family:var(--f-display);color:var(--muted);font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{font-size:.74rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.chip.hill{background:var(--warn-bg);color:var(--warn-ink)}
+.card p{margin:8px 0 0;font-size:.92rem}
+.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.btn{font:600 .8rem var(--f-body);padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:36px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.check{padding:8px 10px}
+.btn.check[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.btn svg{width:15px;height:15px;flex:0 0 auto}
+details.more{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+details.more summary{cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);list-style:none;display:flex;justify-content:space-between;gap:8px;align-items:center}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary .hint{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+details.more summary::after{content:"▾";transition:transform .15s}
+details.more[open] summary::after{transform:rotate(180deg)}
+.more ul{margin:8px 0 0;padding-left:18px;font-size:.88rem;color:var(--muted)}
+.more ul li{margin-top:3px}
+.more ul li strong{color:var(--ink);font-weight:600}
+.costs{margin-top:10px;display:grid;gap:6px}
+.cost{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 10px;font-size:.84rem;align-items:baseline}
+.cost .lbl{flex:1 1 9em;min-width:0}
+.cost .amt{flex:0 0 auto;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cost .amt b{font-weight:700}
+.cost .sub{flex-basis:100%;color:var(--muted);font-size:.76rem}
+.links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+
+/* guide */
+.guide{margin-top:24px;display:grid;gap:10px}
+.guide > details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.guide summary{font-family:var(--f-display);font-weight:700;font-size:1.05rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary small{font-family:var(--f-body);font-weight:500;font-size:.75rem;color:var(--muted)}
+.guide summary::after{content:"▾";font-family:var(--f-body);color:var(--muted)}
+.guide details[open] summary::after{transform:rotate(180deg)}
+.guide ul{padding-left:18px;margin:8px 0 0;font-size:.9rem}
+.guide li{margin-top:6px}
+.guide li.sub-h{list-style:none;margin:12px 0 0 -18px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.phr{display:grid;gap:6px;margin-top:10px}
+.phrase{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;text-align:left;width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;cursor:pointer}
+.phrase .es{font-size:.8rem;color:var(--muted)}
+.phrase .nat{font-family:var(--f-display);font-size:1.05rem;font-weight:700;grid-column:1}
+.phrase .rom{font-size:.78rem;color:var(--muted);grid-column:1}
+.phrase .go{grid-column:2;grid-row:1 / span 3;font-size:.72rem;font-weight:700;color:var(--accent)}
+.sos{display:grid;gap:6px;margin-top:10px}
+.sos-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:6px 0;font-size:.88rem}
+.sos-row:last-child{border-bottom:0}
+.sos-row .n{font-weight:700;font-variant-numeric:tabular-nums;user-select:all;white-space:nowrap}
+.sos-row small{display:block;color:var(--muted);font-size:.74rem}
+.copy{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:4px 8px;font-size:.74rem;font-weight:600;cursor:pointer;min-height:30px}
+.tbl-wrap{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:.84rem;font-variant-numeric:tabular-nums}
+th,td{padding:7px 5px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td:nth-child(2){white-space:normal}
+th{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+tfoot td{font-weight:700;border-bottom:0}
+.muted{color:var(--muted);font-size:.8rem}
+.foot{margin-top:16px;font-size:.76rem;color:var(--muted)}
+
+/* show-to-someone overlay */
+#show{position:fixed;inset:0;z-index:2000;background:var(--surface);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+  padding:max(24px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+#show .s-ask{font-family:var(--f-display);font-size:1.3rem;color:var(--muted)}
+#show .s-big{font-family:var(--f-display);font-size:clamp(2rem,10vw,4.2rem);font-weight:700;line-height:1.15;margin:14px 0;word-break:keep-all;max-width:22ch}
+#show .s-sub{font-family:var(--f-display);font-size:1.2rem}
+#show .s-es{margin-top:16px;color:var(--muted);font-size:.9rem}
+#show button{margin-top:26px}
+
+/* ---------- very narrow (foldable cover screen) ---------- */
+@media (max-width:360px){
+  body{font-size:14px}
+  .stop{grid-template-columns:28px minmax(0,1fr);gap:8px}
+  .num{width:26px;height:26px;font-size:.78rem}
+  .card{padding:10px 12px}
+  .city small{font-size:.62rem}
+  .day b{font-size:.8rem}
+}
+
+/* ---------- unfolded foldable / tablet: two panes ---------- */
+@media (min-width:700px){
+  .app{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(330px,.95fr);column-gap:20px;align-items:start}
+  .content{display:block;grid-column:2;grid-row:1;min-width:0}
+  .map-pane{grid-column:1;grid-row:1;position:sticky;top:0;height:100vh;height:100dvh;padding-block:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-bottom,0px))}
+  .map-box{height:100%}
+  .top{top:0}
+}
+@media (min-width:1100px){ .app{grid-template-columns:minmax(0,1.4fr) minmax(380px,1fr)} }
+
+/* ---------- dual-screen devices: split exactly at the hinge ---------- */
+@media (horizontal-viewport-segments: 2){
+  .app{grid-template-columns:env(viewport-segment-width 0 0) env(viewport-segment-width 1 0);column-gap:calc(env(viewport-segment-left 1 0) - env(viewport-segment-right 0 0));padding-left:0;padding-right:0;max-width:none}
+  .map-pane{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:12px}
+  .content{padding-left:16px;padding-right:max(16px,env(safe-area-inset-right,0px))}
+}
+@media (vertical-viewport-segments: 2){
+  .app{display:block;padding:0;max-width:none}
+  .map-pane{position:fixed;inset:0 0 auto 0;height:env(viewport-segment-height 0 0);padding:max(8px,env(safe-area-inset-top,0px)) 12px 8px;z-index:900;background:var(--bg)}
+  .map-box{height:100%}
+  .content{display:block;margin-top:env(viewport-segment-top 0 1);padding-left:16px;padding-right:16px}
+  .top{top:env(viewport-segment-top 0 1)}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <div class="map-pane">
+    <div class="map-box">
+      <div id="map" role="application" aria-label="Mapa con las paradas del día"></div>
+      <div class="map-status" id="mapStatus">Cargando mapa…</div>
+      <div class="map-tools">
+        <button class="map-btn" id="fit">Ver todo el día</button>
+        <a class="map-btn" id="nearby" href="#" target="_blank" rel="noopener">Dónde estoy</a>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="title-row">
+      <h1>Seúl, Kioto y Tokio</h1>
+      <div class="progress" id="progress"></div>
+    </div>
+    <header class="top" id="top">
+      <div class="cities" role="tablist" aria-label="Ciudad" id="cities"></div>
+      <div class="days" role="tablist" aria-label="Día" id="days"></div>
+    </header>
+    <div class="now-wrap" id="nowWrap"></div>
+    <div class="rest">
+      <main id="list"></main>
+      <div class="guide" id="guide">
+        <details id="g-phr"><summary><span>Frases útiles <small id="phrCountry"></small></span></summary><p class="muted">Tóquenla para mostrarla en grande.</p><div class="phr" id="phrases"></div></details>
+        <details id="g-sos"><summary><span>Emergencias y ayuda <small id="sosCountry"></small></span></summary><div class="sos" id="sos"></div></details>
+        <details id="g-cost"><summary><span>Costos del viaje <small id="costSum"></small></span></summary>
+          <p class="muted" id="rateNote"></p>
+          <div class="tbl-wrap"><table id="costTable"></table></div>
+          <p class="muted">Solo cuenta entradas y transporte con precio fijo, para 4 adultos y 1 persona mayor de 65. Comidas y compras van aparte; sus precios aproximados están en cada parada.</p>
+        </details>
+        <details id="g-prep"><summary><span>Antes de ir y en el día a día</span></summary>
+          <ul>
+            <li class="sub-h"><strong>Corea</strong></li>
+            <li><strong>Reserven el Jardín Secreto.</strong> Las entradas en línea salen 6 días antes a las 10:00 am hora de Corea. Para el tour del domingo 15, eso es el <strong>domingo 8 a las 8:00 pm hora de Miami</strong>. Se agotan rápido; la otra mitad se vende en taquilla desde las 9:00 am del mismo día.</li>
+            <li><strong>Hanbok = entrada gratis</strong> a Changdeokgung y Gyeongbokgung.</li>
+            <li><strong>Mapas:</strong> en Corea Google Maps no da rutas a pie ni en carro. El botón “Cómo llegar” abre Kakao Map, y “Naver” abre Naver Map.</li>
+            <li><strong>Taxis:</strong> descarguen <strong>Kakao T</strong>. Para 5 personas pidan una van o dos taxis.</li>
+            <li><strong>Metro:</strong> una tarjeta T-money por persona (7-Eleven o GS25). El bus de Namsan solo acepta tarjeta. Busquen la salida con elevador (엘리베이터).</li>
+            <li><strong>Bukchon</strong>: visitas de 10:00 am a 5:00 pm (multa de ₩100,000, unos US$76, fuera de horario).</li>
+            <li><strong>Vuelo del miércoles a las 7:00 am:</strong> reserven desde el martes dos taxis o una van para las 4:00 am.</li>
+            <li class="sub-h"><strong>Kioto</strong></li>
+            <li><strong>Tren Haruka:</strong> “HARUKA One-way Ticket” con pasaporte (¥2,200, unos US$14) en la oficina de JR del aeropuerto Kansai o en línea.</li>
+            <li><strong>Tarjeta ICOCA o Suica</strong>, una por persona, para trenes, buses y tiendas.</li>
+            <li><strong>En Japón Google Maps sí funciona</strong> con rutas de tren y a pie; los botones de Japón abren Google Maps.</li>
+            <li><strong>Taxis:</strong> máximo 4 pasajeros, así que son 2 taxis. Funcionan las apps GO y Uber.</li>
+            <li><strong>Maletas:</strong> el jueves en la noche pueden mandarlas del hotel de Kioto al de Tokio por paquetería (takkyubin, unos ¥2,000–3,000 por maleta).</li>
+            <li><strong>Shinkansen:</strong> si una maleta suma más de 160 cm (alto + ancho + fondo), reserven asiento con espacio para equipaje grande.</li>
+            <li class="sub-h"><strong>Tokio</strong></li>
+            <li><strong>Reserven la van al Fuji</strong> para el sábado 21; si el pronóstico sale nublado, pidan cambiarla al domingo.</li>
+            <li><strong>Shibuya Sky:</strong> las entradas salen 2 semanas antes (hacia el 8 de noviembre). Reserven el turno de 3:40–4:00 pm del domingo 22.</li>
+            <li><strong>Compras libres de impuestos:</strong> desde el 1 de noviembre de 2026 se paga el impuesto en la tienda y se devuelve al salir de Japón. Pasen por el kiosco de aduana del aeropuerto antes de documentar maletas.</li>
+            <li><strong>Onsen:</strong> hombres y mujeres por separado y sin ropa. Lávense antes de entrar al agua.</li>
+          </ul>
+        </details>
+      </div>
+      <p class="foot">Mapa: © colaboradores de OpenStreetMap, guardado dentro de la página. Esta página no puede leer el GPS del teléfono: “Cómo llegar” abre Kakao o Google Maps, que sí saben dónde están y trazan la ruta desde ahí. Las marcas de “Hecho” se guardan solo en este teléfono.</p>
+    </div>
+  </div>
+</div>
+
+<div id="show" hidden role="dialog" aria-modal="true" aria-label="Mostrar en grande">
+  <div class="s-ask" id="s-ask"></div>
+  <div class="s-big" id="s-big"></div>
+  <div class="s-sub" id="s-sub"></div>
+  <div class="s-es" id="s-es"></div>
+  <button class="btn primary" id="s-close">Cerrar</button>
+</div>
+
+<script>try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")}catch(e){}</script>
+<script src="leaflet.js"></script>
+<script>
+(function(){
+const RATES = {KRW:1320, JPY:156, USD:1}; // por US$1: ₩ (24 oct 2026) y ¥ (23 oct 2026)
+const SYM = {KRW:"₩", JPY:"¥", USD:"US$"};
+const GROUP = {adults:4, seniors:1};
+
+const DAYS = [
+  {id:"sat", city:"seoul", tab:"Sáb", sub:"14 · Seúl", c:"var(--d-sat)", eyebrow:"Sábado 14 · llegada a Seúl", title:"Llegar y descansar",
+    intro:"Aterrizan a las 4:40 pm en Incheon. Entre inmigración y maletas cuenten una hora; el traslado a Seúl es de 1 a 1.5 horas. La meta de hoy es llegar, cenar algo cerca del hotel y dormir temprano."},
+  {id:"sun", city:"seoul", tab:"Dom", sub:"15 · Seúl", c:"var(--d-sun)", eyebrow:"Domingo 15 · Seúl día 1", title:"Jardín Secreto, hanoks y la torre",
+    intro:"Changdeokgung, Bukchon e Insadong están pegados, así que la mañana es casi toda a pie y corta. Después de almorzar suben a la torre para el atardecer (en noviembre el sol se pone entre 5:15 y 5:30 pm).",
+    note:"Es domingo: lleguen al palacio a las 9:00 am, cuando abre, porque hay más gente que entre semana. Si están muy cansados del vuelo, este día se puede intercambiar completo con el martes (Changdeokgung abre los martes), pero muevan también la reserva del Jardín Secreto."},
+  {id:"mon", city:"seoul", tab:"Lun", sub:"16 · Seúl", c:"var(--d-mon)", eyebrow:"Lunes 16 · Seúl día 2", title:"Palacio real y el arroyo",
+    intro:"Todo en terreno plano. Gyeongbokgung abre el lunes y cierra el martes, así que hoy es el día de la ceremonia de las 10:00 am. La tarde termina en Myeongdong, con compras y cena."},
+  {id:"tue", city:"seoul", tab:"Mar", sub:"17 · Seúl", c:"var(--d-tue)", eyebrow:"Martes 17 · Seúl día 3", title:"Gangnam y Seongsu",
+    intro:"Bongeunsa, la estatua y la biblioteca están a 5 minutos a pie entre sí. A Seongsu y a DDP se llega en la Línea 2 directa, sin transbordos.",
+    note:"Mañana salen al aeropuerto a las 4:00 am. DDP es opcional: si la abuela está cansada, sáltenlo, cenen temprano y dejen las maletas listas esta noche."},
+  {id:"wed", city:"kyoto", tab:"Mié", sub:"18 · Kioto", c:"var(--d-wed)", eyebrow:"Miércoles 18 · Seúl → Kioto", title:"Pabellón Dorado y Gion",
+    intro:"Vuelo de las 7:00 am a Kansai y tren directo a Kioto; llegan hacia las 11:30 am. En la tarde, el Pabellón Dorado (cierra a las 5:00 pm) y Gion al anochecer. En Kioto el sol se pone cerca de las 4:50 pm.",
+    note:"Es el día más largo: se levantan a las 3:30 am. Si la abuela llega agotada, hagan solo Gion y pasen el Pabellón Dorado al viernes a las 9:00 am, después del bosque de bambú y en lugar del puente Togetsukyo (quedan a 20 minutos en taxi)."},
+  {id:"thu", city:"kyoto", tab:"Jue", sub:"19 · Kioto", c:"var(--d-thu)", eyebrow:"Jueves 19 · Kioto y Nara", title:"Torii, ceremonia del té y los venados",
+    intro:"Fushimi Inari temprano, antes de la ceremonia del té de las 11:30 am. En la tarde, tren a Nara para los venados y el Gran Buda de Todai-ji, que cierra a las 5:00 pm.",
+    note:"Me falta la dirección de la ceremonia del té. Supuse que es en el centro de Kioto; si es en Uji o en Nara, el día cambia y lo ajusto."},
+  {id:"fri", city:"kyoto", tab:"Vie", sub:"20 · Kioto", c:"var(--d-fri)", eyebrow:"Viernes 20 en la mañana · Kioto", title:"Bosque de bambú y shinkansen",
+    intro:"El bosque de bambú se llena desde las 9:30 am, así que van primero. Vuelven a la estación de Kioto hacia las 10:30 am y toman el shinkansen de las 11:00 am; llegan a Tokio hacia la 1:15 pm."},
+  {id:"fri2", city:"tokyo", tab:"Vie", sub:"20 · Tokio", c:"var(--d-fri2)", eyebrow:"Viernes 20 en la tarde · Tokio", title:"Llegada y Asakusa",
+    intro:"Llegan a la estación de Tokio hacia la 1:15 pm, dejan las maletas en el hotel y van al templo Senso-ji en Asakusa. En Tokio el sol se pone hacia las 4:30 pm y el templo se ilumina de noche.",
+    note:"Me falta la dirección del hotel de Tokio. Cuando me la mandes, la pongo en el mapa y ajusto los traslados."},
+  {id:"sat2", city:"tokyo", region:"fuji", tab:"Sáb", sub:"21 · Fuji", c:"var(--d-sat2)", eyebrow:"Sábado 21 · excursión al monte Fuji", title:"Monte Fuji y onsen",
+    intro:"Día completo en van privada con chofer: la pagoda Chureito, el pueblo de Oshino Hakkai, el lago Kawaguchi y un onsen con vista al Fuji. Salen a las 7:30 am y vuelven a Tokio hacia las 5:30 pm.",
+    note:"El Fuji se ve mejor en la mañana y con cielo despejado. Revisen el pronóstico el jueves: si el sábado sale nublado, cambien este día completo por el domingo."},
+  {id:"sun2", city:"tokyo", tab:"Dom", sub:"22 · Tokio", c:"var(--d-sun2)", eyebrow:"Domingo 22 · Tokio", title:"Torre de Tokio y Shibuya",
+    intro:"Torre de Tokio en la mañana, cuando a veces se ve el Fuji. Después todo es en Shibuya: el cruce, Don Quijote y Shibuya Sky al atardecer, a pocos minutos a pie uno de otro."},
+  {id:"mon2", city:"tokyo", tab:"Lun", sub:"23 · Tokio", c:"var(--d-mon2)", eyebrow:"Lunes 23 · regreso", title:"Mañana libre y aeropuerto",
+    intro:"Mañana tranquila hasta la 1:00 pm y después directo al aeropuerto para el vuelo de las 5:10 pm."}
+];
+
+
+/* cost: {l:label, k:₩ (or [min,max]), u:"pp"|"car"|"item"|"drink"|"ride", s:senior ₩, fixed:true counts in totals, n:note, x:multiplier for totals} */
+const STOPS = [
+  {id:"arr", day:"sat", time:"4:40 pm", name:"Aeropuerto de Incheon → hotel", ko:"인천국제공항", rest:true, noMap:true, dur:"1.5–2.5 h", pace:"Fácil",
+    desc:"Con 5 personas, maletas y la abuela, lo más cómodo es un taxi tipo van directo al hotel. La alternativa más barata es el tren AREX Express a Seoul Station (43 min) y de ahí taxi.",
+    tips:["Cena ligera cerca del hotel y a dormir.","Compren las tarjetas T-money en el 7-Eleven o GS25 del aeropuerto."],
+    cost:[{l:"Taxi al centro",k:[60000,80000],u:"car",n:"Por carro. Con 5 personas y maletas serán 2 carros o una van (cuesta más)."},
+          {l:"AREX Express (alternativa)",k:11000,u:"pp"},
+          {l:"Tarjeta T-money",k:4000,u:"pp",fixed:true,n:"Costo de la tarjeta; aparte se recarga."}]},
+
+  {id:"cdg", day:"sun", time:"9:00 am", name:"Palacio Changdeokgung", ko:"창덕궁", addr:"서울 종로구 율곡로 99",
+    lat:37.5794, lng:126.9910, dur:"1 h", pace:"Plano", en:"Changdeokgung Palace",
+    desc:"Más pequeño y verde que Gyeongbokgung, y patrimonio UNESCO. Recorran la zona de edificios con calma antes del tour del jardín.",
+    tips:["<strong>Cerrado los lunes.</strong> En noviembre abre de 9:00 am a 5:30 pm.","Metro: Anguk, Línea 3, salida 3 (6 min a pie).","Gratis con hanbok."],
+    cost:[{l:"Entrada",k:3000,u:"pp",fixed:true,n:"Mayores de 65 pueden entrar gratis; lleven el pasaporte."},{l:"Alquiler de hanbok (opcional)",k:[15000,30000],u:"pp",n:"Aprox., por 2–4 horas."}]},
+  {id:"huwon", day:"sun", time:"10:30 am", name:"Jardín Secreto (Huwon), tour guiado", ko:"창덕궁 후원",
+    lat:37.5818, lng:126.9918, dur:"1.5 h", pace:"Cuestas suaves", hill:true, en:"Huwon Secret Garden Changdeokgung",
+    desc:"Solo se entra con tour guiado. En inglés: 10:30, 11:30, 2:30 y 3:30. Son 90 minutos a pie con algunas cuestas suaves. Si la abuela prefiere no hacerlo, puede esperar sentada en el palacio.",
+    tips:["<strong>Reservar en línea</strong> 6 días antes a las 10:00 am hora de Corea (domingo anterior, 8:00 pm en Miami).","Sin reserva: taquilla desde las 9:00 am, cupos limitados."],
+    cost:[{l:"Tour del jardín (además de la entrada)",k:5000,u:"pp",fixed:true}]},
+  {id:"bukchon", day:"sun", time:"12:15 pm", name:"Bukchon Hanok Village", ko:"북촌한옥마을 (북촌로11길)",
+    lat:37.5826, lng:126.9849, dur:"45 min", pace:"Cuestas", hill:true, en:"Bukchon Hanok Village",
+    desc:"Callejones de casas tradicionales con vista a la ciudad. Truco para la abuela: tomen un taxi a la parte de arriba (Bukchon-ro 11-gil) y bajen caminando hacia Anguk e Insadong. Todo de bajada.",
+    tips:["Horario de visita: 10:00 am a 5:00 pm.","Es barrio residencial: hablen bajito."],
+    cost:[{l:"Entrada",k:0,u:"pp"},{l:"Taxi corto a la parte de arriba",k:[5000,7000],u:"car",n:"Aprox., por carro."}]},
+  {id:"insa", day:"sun", time:"1:15 pm", name:"Insadong: almuerzo y té", ko:"인사동 (쌈지길)", addr:"서울 종로구 인사동길 44",
+    lat:37.5743, lng:126.9850, dur:"2 h", pace:"Plano", en:"Ssamziegil Insadong",
+    desc:"La calle de artesanías, papel hanji y casas de té. Ssamziegil es una rampa en espiral sin escaleras, perfecta para la abuela. Almuercen comida coreana tradicional y terminen con té en una casa de té de los callejones.",
+    tips:["10 minutos a pie de Bukchon, de bajada.","Hacia las 3:30 pm tomen taxi a la estación Chungmuro (unos 10 min) para subir a la torre."],
+    cost:[{l:"Almuerzo coreano",k:[12000,20000],u:"pp",n:"Aprox."},{l:"Té tradicional",k:[8000,10000],u:"drink",n:"Aprox., por taza."}]},
+  {id:"tower", day:"sun", time:"3:45 pm", name:"N Seoul Tower al atardecer", ko:"N서울타워", addr:"서울 용산구 남산공원길 105",
+    lat:37.5512, lng:126.9882, dur:"3 h con cena", pace:"Subida corta al final", hill:true, en:"N Seoul Tower",
+    desc:"Lleguen arriba hacia las 4:00 pm, den una vuelta por la plaza y los candados del amor, y suban al mirador antes del atardecer para ver después la ciudad iluminada. Lo más fácil para la abuela es el bus circular de Namsan (01A o 01B) desde la salida 2 de la estación Chungmuro; deja a una caminata corta y pavimentada de la plaza. El mirador se sube en elevador.",
+    tips:["Los taxis no suben hasta arriba.","El domingo el mirador abre hasta las 11:00 pm (última entrada 10:30 pm).","Para cenar hay restaurantes en la misma torre."],
+    cost:[{l:"Mirador",k:29000,u:"pp",s:23000,fixed:true,n:"Mayores de 65: ₩23,000 (US$17)."},
+          {l:"Bus de Namsan, ida y vuelta",k:1500,u:"pp",fixed:true,x:2,n:"₩1,500 por viaje, solo con T-money."},
+          {l:"Teleférico ida y vuelta (alternativa)",k:15000,u:"pp"}]},
+
+  {id:"gbg-cer", day:"mon", time:"9:45 am", name:"Cambio de guardia en Gyeongbokgung", ko:"경복궁 수문장 교대의식", addr:"서울 종로구 사직로 161",
+    lat:37.5768, lng:126.9769, dur:"20 min", pace:"Plano", en:"Gyeongbokgung Palace",
+    desc:"La ceremonia es a las 10:00 am (y repite a las 2:00 pm). Lleguen 15 minutos antes para ponerle a la abuela un buen sitio al frente. Se ve desde la explanada entre las puertas Gwanghwamun y Heungnyemun.",
+    tips:["<strong>No hay ceremonia los martes</strong> (el palacio cierra).","Metro: Gyeongbokgung, Línea 3, salida 5.","Puede cancelarse con lluvia fuerte o frío extremo."],
+    cost:[{l:"Ver la ceremonia",k:0,u:"pp"}]},
+  {id:"gbg", day:"mon", time:"10:20 am", name:"Recorrido por Gyeongbokgung", ko:"경복궁", addr:"서울 종로구 사직로 161",
+    lat:37.5797, lng:126.9765, dur:"2 h", pace:"Plano, grava", en:"Gyeongbokgung Palace",
+    desc:"No intenten verlo todo. Una ruta corta: Geunjeongjeon (sala del trono), el pabellón Gyeonghoeru sobre el lago y el pabellón Hyangwonjeong al fondo. Hay bancos a la sombra.",
+    tips:["En noviembre abre de 9:00 am a 5:00 pm (última entrada 4:00 pm).","El Museo Nacional del Folclore está adentro y es gratis, con baños y asientos."],
+    cost:[{l:"Entrada",k:3000,u:"pp",fixed:true,n:"Gratis con hanbok. Mayores de 65 pueden entrar gratis; lleven el pasaporte."},{l:"Alquiler de hanbok (opcional)",k:[15000,30000],u:"pp",n:"Aprox., por 2–4 horas."}]},
+  {id:"tosok", day:"mon", time:"12:30 pm", name:"Almuerzo: Tosokchon Samgyetang", ko:"토속촌 삼계탕", addr:"서울 종로구 자하문로5길 5",
+    lat:37.5779, lng:126.9715, dur:"1 h", pace:"10 min a pie", en:"Tosokchon Samgyetang",
+    desc:"Sopa de pollo con ginseng, suave y caliente, ideal para la abuela. Es famoso y hay fila, pero avanza rápido.",
+    tips:["Queda a 10 minutos a pie al oeste del palacio, o un taxi corto."],
+    cost:[{l:"Samgyetang",k:[20000,25000],u:"pp",n:"Aprox., por plato."}]},
+  {id:"cgc", day:"mon", time:"2:15 pm", name:"Paseo por el arroyo Cheonggyecheon", ko:"청계천 (청계광장)",
+    lat:37.5693, lng:126.9780, dur:"1 h", pace:"Plano", en:"Cheonggye Plaza",
+    desc:"Empiecen en Cheonggye Plaza (la cascada) y caminen río abajo cerca de 1 km hasta el puente Samilgyo, a paso lento. Ahí suban a la calle y sigan a Myeongdong: 5 minutos en taxi o unos 15 a pie.",
+    tips:["Para bajar al arroyo hay escaleras. Si a la abuela le cuesta, la acera de arriba va paralela todo el tramo.","Taxi desde el restaurante: 5 minutos."],
+    cost:[{l:"Paseo",k:0,u:"pp"},{l:"Taxi corto a Myeongdong",k:[5000,8000],u:"car",n:"Aprox., por carro."}]},
+  {id:"myeong", day:"mon", time:"3:30 pm", name:"Myeongdong: compras y cena", ko:"명동",
+    lat:37.5637, lng:126.9850, dur:"3–4 h", pace:"Plano, mucha gente", en:"Myeongdong",
+    desc:"Primero las tiendas de cosmética y la calle principal. Los puestos de comida callejera se arman entre las 4:00 y las 5:00 pm y siguen hasta las 10:00 pm, y de noche la calle se llena de luces. Para que la abuela se siente, cenen en Myeongdong Kyoja (kalguksu y mandu).",
+    tips:["Metro: Myeongdong, Línea 4.","Acuerden un punto de encuentro: hay mucha gente."],
+    cost:[{l:"Comida callejera",k:[3000,7000],u:"item",n:"Aprox., por porción."},{l:"Kalguksu en Myeongdong Kyoja",k:[11000,13000],u:"pp",n:"Aprox., por plato."}]},
+
+  {id:"bong", day:"tue", time:"10:00 am", name:"Templo Bongeunsa", ko:"봉은사", addr:"서울 강남구 봉은사로 531",
+    lat:37.5150, lng:127.0573, dur:"45 min", pace:"Rampa suave", en:"Bongeunsa Temple",
+    desc:"Templo budista de más de mil años en medio de los rascacielos. En la mañana está tranquilo. El Buda Maitreya de 23 metros queda subiendo una rampa suave.",
+    tips:["Metro: Bongeunsa, Línea 9, salida 1."],
+    cost:[{l:"Entrada",k:0,u:"pp"}]},
+  {id:"gstyle", day:"tue", time:"11:00 am", name:"Estatua de las manos de Gangnam Style", ko:"강남스타일 말춤 조형물", addr:"서울 강남구 영동대로 513 (코엑스 동문)",
+    lat:37.5116, lng:127.0612, labelLeft:true, dur:"15 min", pace:"Plano", en:"Gangnam Style statue COEX",
+    desc:"Las muñecas cruzadas del baile, en la puerta este de COEX. Foto de grupo y listo; está a 5 minutos a pie del templo.",
+    tips:["Metro más cercano: Bongeunsa salida 7 o Samseong salida 6."],
+    cost:[{l:"Entrada",k:0,u:"pp"}]},
+  {id:"star", day:"tue", time:"11:20 am", name:"Starfield Library y COEX Mall", ko:"별마당 도서관 (코엑스몰)", addr:"서울 강남구 영동대로 513",
+    lat:37.5100, lng:127.0599, dur:"2 h con almuerzo", pace:"Plano, techado", en:"Starfield Library COEX",
+    desc:"Los libreros de 13 metros dentro del mall. Hay muchos asientos, así que la abuela puede descansar mientras los demás exploran. Almuercen en COEX: hay food court y restaurantes de todo tipo.",
+    tips:["Biblioteca abierta de 10:30 am a 10:00 pm.","Todo bajo techo, con elevadores."],
+    cost:[{l:"Biblioteca",k:0,u:"pp"},{l:"Almuerzo en COEX",k:[12000,18000],u:"pp",n:"Aprox."}]},
+  {id:"seongsu", day:"tue", time:"2:30 pm", name:"Seongsu-dong", ko:"성수동",
+    lat:37.5446, lng:127.0557, dur:"2 h", pace:"Plano", en:"Seongsu-dong",
+    desc:"El “Brooklyn de Seúl”: fábricas viejas convertidas en cafés, tiendas de diseño y pop-ups. Plan tranquilo: escojan un café grande, siéntense y caminen un par de cuadras.",
+    tips:["Metro: Línea 2 directa de Samseong a Seongsu (unos 15 min)."],
+    cost:[{l:"Metro Samseong → Seongsu",k:1550,u:"pp",fixed:true},{l:"Café",k:[6000,9000],u:"drink",n:"Aprox., por bebida."}]},
+  {id:"ddp", day:"tue", time:"6:00 pm", name:"Dongdaemun Design Plaza (DDP)", ko:"동대문디자인플라자", addr:"서울 중구 을지로 281", optional:true,
+    lat:37.5665, lng:127.0092, dur:"1 h", pace:"Plano", en:"Dongdaemun Design Plaza",
+    desc:"El edificio curvo de Zaha Hadid, mejor de noche cuando se ilumina. La plaza exterior es plana. Opcional: mañana madrugan.",
+    tips:["Metro: Línea 2 directa de Seongsu a Dongdaemun History & Culture Park (unos 15 min)."],
+    cost:[{l:"Plaza exterior",k:0,u:"pp",n:"Las exposiciones adentro se pagan aparte."},{l:"Metro Seongsu → DDP",k:1550,u:"pp",fixed:true}]},
+
+  {id:"icn-dep", day:"wed", time:"4:00 am", name:"Salida del hotel al aeropuerto de Incheon", ko:"인천국제공항 제1여객터미널", rest:true, noMap:true, dur:"1 h", pace:"Taxi",
+    desc:"A esa hora no hay trenes al aeropuerto que lleguen a tiempo, así que vayan en taxi. Reserven desde el martes una van o dos taxis por Kakao T o con la recepción del hotel.",
+    tips:["Confirmen la terminal de su aerolínea (T1 o T2) en el boleto."],
+    cost:[{l:"Taxi al aeropuerto",k:[60000,80000],u:"car",cur:"KRW",n:"Aprox., por carro. Puede tener recargo nocturno."}]},
+  {id:"flight", day:"wed", time:"7:00 am", name:"Vuelo Seúl → Osaka Kansai (KIX)", rest:true, noMap:true, dur:"1 h 45 min",
+    desc:"Llegan a Kansai entre las 9:00 y las 9:30 am. Inmigración y maletas, unos 45 minutos."},
+  {id:"haruka", day:"wed", time:"10:15 am", name:"Tren Haruka: aeropuerto → estación de Kioto", ja:"関西空港駅", rest:true, noMap:true, dur:"75 min", pace:"Sentados",
+    desc:"Tren directo y sin transbordos, con espacio para maletas. Sale unas dos veces por hora del aeropuerto.",
+    tips:["Compren el “HARUKA One-way Ticket” con pasaporte en la oficina de JR de la Terminal 1.","Aprovechen para comprar ICOCA, la tarjeta para trenes y buses."],
+    cost:[{l:"HARUKA One-way Ticket",k:2200,u:"pp",fixed:true,n:"Precio para turistas con pasaporte."}]},
+  {id:"kyoto-st", day:"wed", time:"11:30 am", name:"Estación de Kioto: maletas y almuerzo", ja:"京都駅", addr:"京都府京都市下京区東塩小路町",
+    lat:34.9858, lng:135.7588, dur:"1.5 h", pace:"Plano, techado", en:"Kyoto Station",
+    desc:"Dejen las maletas en el hotel aunque el check-in sea más tarde, o en el depósito de equipaje de la estación. Almuercen en la estación: los pisos de restaurantes de Kyoto Porta y del edificio Isetan tienen de todo y con asientos.",
+    tips:["Del hotel o la estación al Pabellón Dorado: taxi de 20–25 minutos (2 taxis)."],
+    cost:[{l:"Almuerzo",k:[1500,3000],u:"pp",n:"Aprox."}]},
+  {id:"kinkaku", day:"wed", time:"1:30 pm", name:"Pabellón Dorado (Kinkaku-ji)", ja:"金閣寺", addr:"京都府京都市北区金閣寺町1",
+    lat:35.0394, lng:135.7292, dur:"1 h", pace:"Plano, grava", en:"Kinkakuji",
+    desc:"El pabellón cubierto de oro sobre el lago. El recorrido es de una sola vía y dura unos 45 minutos. Con las hojas rojas de noviembre se pone muy lleno; la foto clásica es justo al entrar, frente al lago.",
+    tips:["Abierto de 9:00 am a 5:00 pm.","Hay un tramo corto con escalones suaves en la parte de atrás del jardín."],
+    cost:[{l:"Entrada",k:500,u:"pp",fixed:true},{l:"Taxi desde la estación",k:[2000,2500],u:"car",n:"Aprox., por carro (2 carros)."}]},
+  {id:"gion", day:"wed", time:"3:45 pm", name:"Gion y el santuario Yasaka al anochecer", ja:"八坂神社", addr:"京都府京都市東山区祇園町北側625",
+    lat:35.0037, lng:135.7785, dur:"2.5 h con cena", pace:"Plano", en:"Yasaka Shrine Gion",
+    desc:"Empiecen en el santuario Yasaka, que se ilumina con faroles al oscurecer. Después bajen por Hanamikoji, la calle de casas de té de madera donde a veces se ven geishas camino al trabajo. Cenen en Gion o en Pontocho, el callejón junto al río.",
+    tips:["Taxi del Pabellón Dorado a Gion: unos 30 minutos.","<strong>No tomen fotos a geishas ni entren a los callejones privados</strong> marcados con letreros: la multa es de ¥10,000 (unos US$64)."],
+    cost:[{l:"Santuario Yasaka",k:0,u:"pp"},{l:"Taxi desde el Pabellón Dorado",k:[3000,3500],u:"car",n:"Aprox., por carro."},{l:"Cena",k:[3000,6000],u:"pp",n:"Aprox."}]},
+
+  {id:"inari", day:"thu", time:"8:30 am", name:"Fushimi Inari Taisha", ja:"伏見稲荷大社", addr:"京都府京都市伏見区深草藪之内町68",
+    lat:34.9671, lng:135.7727, dur:"1–1.5 h", pace:"Escalones suaves", hill:true, en:"Fushimi Inari Taisha",
+    desc:"Los miles de torii naranjas. No hace falta subir la montaña completa (2–3 horas): con llegar a Senbon Torii, el túnel doble de puertas, y caminar 15–20 minutos más ya tienen las mejores fotos. Temprano hay mucha menos gente.",
+    tips:["Tren: JR línea Nara de la estación de Kioto a Inari, 5 minutos. La entrada al santuario queda frente a la estación.","Abierto las 24 horas.","Salgan hacia la ceremonia del té a las 10:45 am."],
+    cost:[{l:"Entrada",k:0,u:"pp"},{l:"Tren Kioto → Inari",k:150,u:"pp",n:"Aprox., con ICOCA."}]},
+  {id:"tea", day:"thu", time:"11:30 am", name:"Ceremonia del té", rest:true, noMap:true, dur:"1–1.5 h",
+    desc:"Lleguen 15 minutos antes. Desde Fushimi Inari, el taxi al centro de Kioto es de unos 20 minutos.",
+    tips:["Mándenme la dirección y la pongo en el mapa."],
+    cost:[{l:"Ceremonia",k:0,u:"pp",n:"Ya reservada; no está en el total."}]},
+  {id:"to-nara", day:"thu", time:"1:15 pm", name:"Tren a Nara", rest:true, noMap:true, dur:"35 min", pace:"Sentados",
+    desc:"Desde la estación de Kioto, el expreso limitado de Kintetsu llega a Kintetsu-Nara en 35 minutos, con asientos reservados. Esa estación es la más cercana al parque. Coman algo rápido antes de salir o compren un bento en la estación.",
+    tips:["El andén de Kintetsu está dentro de la estación de Kioto, al lado de los andenes de JR.","Alternativa: tren JR Miyakoji Rapid a JR Nara, 45 minutos y ¥720."],
+    cost:[{l:"Kintetsu expreso limitado, ida y vuelta",k:1130,u:"pp",fixed:true,x:2,n:"¥1,130 por trayecto."}]},
+  {id:"deer", day:"thu", time:"2:00 pm", name:"Parque de Nara y los venados", ja:"奈良公園", addr:"奈良県奈良市春日野町",
+    lat:34.6851, lng:135.8430, dur:"1 h", pace:"Plano", en:"Nara Park",
+    desc:"Cientos de venados sueltos que hacen reverencias para pedir galletas. Del tren al parque son unos 10 minutos a pie, en bajada suave.",
+    tips:["Las galletas para venados se compran en puestos del parque.","Muestren las galletas solo cuando vayan a dar; si los venados se amontonan, enseñen las manos vacías.","Pueden morder o empujar un poco: cuiden a la abuela si se juntan muchos."],
+    cost:[{l:"Galletas para venados (shika senbei)",k:200,u:"item",n:"Por paquete."}]},
+  {id:"todaiji", day:"thu", time:"3:15 pm", name:"Todai-ji y el Gran Buda", ja:"東大寺 大仏殿", addr:"奈良県奈良市雑司町406-1",
+    lat:34.6890, lng:135.8398, labelLeft:true, dur:"1 h", pace:"Plano, grava", en:"Todaiji",
+    desc:"Uno de los edificios de madera más grandes del mundo, con un Buda de bronce de 15 metros adentro. El camino desde el parque es plano y los venados los acompañan hasta la puerta.",
+    tips:["En noviembre abre de 8:00 am a 5:00 pm.","De vuelta: tren desde Kintetsu-Nara hacia las 5:00 pm, y cenan en Kioto."],
+    cost:[{l:"Sala del Gran Buda",k:800,u:"pp",fixed:true,n:"Precio de la oficina de turismo de Nara; algunas guías de 2026 dicen ¥1,000."}]},
+
+  {id:"bamboo", day:"fri", time:"7:45 am", name:"Bosque de bambú de Arashiyama", ja:"嵐山 竹林の小径", addr:"京都府京都市右京区嵯峨天龍寺芒ノ馬場町",
+    lat:35.0170, lng:135.6713, labelLeft:true, dur:"45 min", pace:"Plano", en:"Arashiyama Bamboo Grove",
+    desc:"Un sendero de unos 400 metros entre bambúes altísimos. Antes de las 9:00 am se camina tranquilo y se puede tomar fotos sin multitud.",
+    tips:["Tren: JR línea Sagano de la estación de Kioto a Saga-Arashiyama, 15 minutos, y 10 minutos a pie. Con maletas, mejor 2 taxis (25 minutos).","Abierto las 24 horas."],
+    cost:[{l:"Entrada",k:0,u:"pp"},{l:"Tren Kioto → Saga-Arashiyama",k:240,u:"pp",fixed:true}]},
+  {id:"tenryuji", day:"fri", time:"8:40 am", name:"Jardín de Tenryu-ji", ja:"天龍寺", optional:true, noMap:true,
+    lat:35.0158, lng:135.6738, dur:"40 min", pace:"Plano", en:"Tenryuji",
+    desc:"Jardín zen con estanque y hojas rojas, pegado al bosque de bambú. Abre a las 8:30 am. Hay bancas para descansar mirando el estanque.",
+    cost:[{l:"Jardín",k:500,u:"pp",n:"Opcional, solo si van bien de tiempo; no está en el total."}]},
+  {id:"togetsu", day:"fri", time:"9:15 am", name:"Puente Togetsukyo", ja:"渡月橋",
+    lat:35.0127, lng:135.6778, dur:"30 min", pace:"Plano", en:"Togetsukyo Bridge",
+    desc:"El puente de madera sobre el río con las montañas rojas de fondo. A un lado está % Arabica, el café famoso con vista al río.",
+    tips:["Salgan hacia la estación de Kioto a las 9:45 am a más tardar: 2 taxis, unos 25 minutos."]},
+  {id:"shinkansen", day:"fri", time:"11:00 am", name:"Shinkansen Nozomi a Tokio", ja:"京都駅 新幹線", addr:"京都府京都市下京区東塩小路町",
+    lat:34.9858, lng:135.7588, dur:"2 h 13 min", pace:"Sentados", en:"Kyoto Station Shinkansen",
+    desc:"Sale de los andenes del Tokaido Shinkansen en la estación de Kioto y llega a la estación de Tokio cerca de la 1:15 pm. Compren bentos en la estación para comer en el tren. Del lado derecho del tren (asiento E) se ve el monte Fuji si está despejado.",
+    tips:["Reserven los 5 asientos juntos con anticipación.","Si alguna maleta suma más de 160 cm, reserven un asiento con espacio para equipaje grande."],
+    cost:[{l:"Nozomi, asiento reservado",k:14170,u:"pp",fixed:true},{l:"Bento",k:[1200,2000],u:"pp",n:"Aprox."}]},
+
+  {id:"tokyo-st", day:"fri2", time:"1:15 pm", name:"Estación de Tokio → hotel", ja:"東京駅", addr:"東京都千代田区丸の内1丁目",
+    lat:35.6812, lng:139.7671, dur:"1 h", pace:"Plano, techado", en:"Tokyo Station",
+    desc:"Del andén del shinkansen salgan por el lado Marunouchi, el edificio de ladrillo rojo, y tomen 2 taxis al hotel para dejar las maletas.",
+    cost:[{l:"Taxi al hotel",k:[1500,3000],u:"car",n:"Aprox., por carro; depende de dónde esté el hotel."}]},
+  {id:"sensoji", day:"fri2", time:"3:00 pm", name:"Templo Senso-ji y calle Nakamise", ja:"浅草寺", addr:"東京都台東区浅草2-3-1",
+    lat:35.7148, lng:139.7967, dur:"3 h con cena", pace:"Plano", en:"Sensoji Temple",
+    desc:"El templo más antiguo de Tokio. Entren por la puerta Kaminarimon, la del farol rojo gigante, y caminen la calle Nakamise con sus puestos de dulces y recuerdos hasta el templo. La sala principal cierra a las 5:00 pm, así que lleguen antes de las 4:30. Después del atardecer el templo y la pagoda se iluminan. Cenen en Asakusa.",
+    tips:["Metro: Asakusa, línea Ginza. En taxi desde el centro, unos 20 minutos.","Los puestos de Nakamise abren más o menos de 9:00 am a 7:00 pm.","La suerte en papel (omikuji) cuesta ¥100: si sale mala, se deja amarrada en el templo."],
+    cost:[{l:"Entrada",k:0,u:"pp"},{l:"Cena",k:[2000,4000],u:"pp",n:"Aprox."}]},
+
+  {id:"fuji-pick", day:"sat2", time:"7:30 am", name:"Recogida en el hotel: van privada al Fuji", rest:true, noMap:true, dur:"9.5 h", pace:"Sentados",
+    desc:"Con la abuela, una van privada para los 5 es mucho más cómoda que el bus de tour: los recoge en el hotel, paran donde quieran y pueden incluir el onsen, que los buses no hacen. Pidan al reservar este orden de paradas: Chureito, Oshino Hakkai, parque Oishi y onsen Yurari.",
+    tips:["Reserven con anticipación; hay varios operadores en GoWithGuide, Viator y Klook.","La alternativa barata es el bus de tour desde Shinjuku o la estación de Tokio, unos US$28 por persona, pero con horario fijo y sin onsen.","Lleven abrigo: en el Fuji hace bastante más frío que en Tokio."],
+    cost:[{l:"Van privada hasta 5 personas",k:440,u:"group",cur:"USD",fixed:true,n:"Precio de un operador en GoWithGuide para 9.5 h; incluye gasolina, peajes y chofer que habla inglés. Las horas extra se cobran aparte."}]},
+  {id:"chureito", day:"sat2", time:"9:30 am", name:"Pagoda Chureito", ja:"新倉山浅間公園 忠霊塔",
+    lat:35.5012, lng:138.8016, dur:"1 h", pace:"Casi 400 escalones", hill:true, en:"Chureito Pagoda",
+    desc:"La foto clásica de Japón: la pagoda roja con el Fuji detrás. Para llegar al mirador hay casi 400 escalones. La abuela puede quedarse abajo en el santuario con alguien mientras los demás suben.",
+    cost:[{l:"Entrada",k:0,u:"pp"}]},
+  {id:"oshino", day:"sat2", time:"10:45 am", name:"Oshino Hakkai y almuerzo", ja:"忍野八海",
+    lat:35.4602, lng:138.8327, dur:"1.5 h con almuerzo", pace:"Plano", en:"Oshino Hakkai",
+    desc:"Un pueblito con estanques de agua de manantial del Fuji, tan transparente que se ve el fondo, y casas de techo de paja. Almuercen hoto, el guiso de fideos gruesos de la zona.",
+    cost:[{l:"Entrada",k:0,u:"pp"},{l:"Almuerzo",k:[1500,2500],u:"pp",n:"Aprox."}]},
+  {id:"oishi", day:"sat2", time:"12:45 pm", name:"Parque Oishi y lago Kawaguchi", ja:"大石公園",
+    lat:35.5205, lng:138.7434, dur:"45 min", pace:"Plano", en:"Oishi Park Kawaguchiko",
+    desc:"Un parque plano a la orilla del lago, con flores y el Fuji de frente al otro lado del agua. Cerca está el Corredor de los Arces, que en noviembre se pone rojo si todavía quedan hojas.",
+    cost:[{l:"Entrada",k:0,u:"pp"}]},
+  {id:"yurari", day:"sat2", time:"2:00 pm", name:"Onsen Fuji Chobo no Yu Yurari", ja:"富士眺望の湯 ゆらり",
+    lat:35.4864, lng:138.6896, dur:"1.5 h", pace:"Plano", en:"Fuji Chobo no Yu Yurari",
+    desc:"Baños termales con vista al Fuji desde las pozas al aire libre. Como en todo onsen japonés, hombres y mujeres se bañan por separado y sin ropa, así que la familia se divide y se reúne después en la sala de descanso o el restaurante.",
+    tips:["Antes de entrar al agua hay que lavarse sentado en las duchas. La toallita pequeña no se mete al agua y el pelo largo va amarrado.","Para la abuela: que entre despacio, no más de 10–15 minutos seguidos en el agua caliente y que tome agua.","Muchos onsen no permiten tatuajes visibles; si alguien tiene, confírmenlo antes.","Si prefieren bañarse todos juntos, en Hakone está Yunessun, un onsen con traje de baño, pero queda en otra excursión."],
+    cost:[{l:"Entrada fin de semana, con toalla",k:1700,u:"pp",fixed:true}]},
+  {id:"fuji-back", day:"sat2", time:"3:30 pm", name:"Regreso a Tokio", rest:true, noMap:true, dur:"2 h",
+    desc:"Llegan al hotel hacia las 5:30 pm. Cena tranquila cerca del hotel."},
+
+  {id:"ttower", day:"sun2", time:"9:30 am", name:"Torre de Tokio", ja:"東京タワー", addr:"東京都港区芝公園4-2-8",
+    lat:35.6586, lng:139.7454, dur:"1 h", pace:"Elevador", en:"Tokyo Tower",
+    desc:"Suban al mirador principal, a 150 metros. En las mañanas despejadas se ve el Fuji hacia el oeste. Abajo, el templo Zojo-ji tiene la foto clásica con la torre de fondo.",
+    tips:["Abierta de 9:00 am a 11:00 pm.","Metro: Akabanebashi, línea Oedo, 5 minutos a pie."],
+    cost:[{l:"Mirador principal",k:1500,u:"pp",fixed:true}]},
+  {id:"shibuya-x", day:"sun2", time:"11:15 am", name:"Cruce de Shibuya y Hachiko", ja:"渋谷スクランブル交差点",
+    lat:35.6595, lng:139.7005, dur:"1.5 h con almuerzo", pace:"Plano, mucha gente", en:"Shibuya Scramble Crossing",
+    desc:"Crucen con la multitud, tómense la foto con la estatua del perro Hachiko y almuercen en la zona. La vista de arriba del cruce es gratis desde el pasillo de vidrio que conecta la estación con Shibuya Mark City.",
+    tips:["Taxi desde la Torre de Tokio: unos 15–20 minutos.","Cuiden a la abuela en el cruce: la luz verde dura poco y hay mucha gente."],
+    cost:[{l:"Taxi desde la Torre de Tokio",k:[2000,2500],u:"car",n:"Aprox., por carro."},{l:"Almuerzo",k:[1500,3000],u:"pp",n:"Aprox."}]},
+  {id:"donki", day:"sun2", time:"1:30 pm", name:"MEGA Don Quijote Shibuya", ja:"MEGAドン・キホーテ渋谷本店", addr:"東京都渋谷区宇田川町28-6",
+    lat:35.6610, lng:139.6977, dur:"1.5 h", pace:"Varios pisos, elevador", en:"MEGA Don Quijote Shibuya",
+    desc:"Una de las tiendas Don Quijote más grandes de Japón: dulces, cosméticos, recuerdos y cosas raras en varios pisos. Abierta las 24 horas.",
+    tips:["<strong>Lleven el pasaporte.</strong> Desde el 1 de noviembre de 2026, en compras de más de ¥5,000 se paga el impuesto en la tienda y se devuelve al salir de Japón: en el aeropuerto escanean el pasaporte en el kiosco de aduana antes de documentar maletas.","Si quieren comprar con calma, pueden volver el lunes en la mañana."],
+    cost:[{l:"Entrada",k:0,u:"pp"}]},
+  {id:"sky", day:"sun2", time:"3:45 pm", name:"Shibuya Sky al atardecer", ja:"渋谷スカイ (渋谷スクランブルスクエア)",
+    lat:35.6585, lng:139.7023, dur:"1.5 h", pace:"Elevador, terraza al aire libre", en:"Shibuya Sky",
+    desc:"Mirador al aire libre en la azotea del edificio Shibuya Scramble Square, a 229 metros. Con el turno de las 3:40–4:00 pm ven el atardecer (hacia las 4:30) y después la ciudad iluminada y el cruce desde arriba.",
+    tips:["<strong>Reserven en línea</strong>: las entradas salen 2 semanas antes (hacia el 8 de noviembre) y los turnos del atardecer se agotan.","Bolsos y sombreros van a los casilleros antes de salir a la terraza. Lleven abrigo: arriba hace viento.","La entrada es por el piso 14, conectado con la estación de Shibuya."],
+    cost:[{l:"Entrada en línea, turno de tarde",k:3400,u:"pp",fixed:true,n:"En taquilla cuesta ¥3,700."}]},
+
+  {id:"mon-am", day:"mon2", time:"9:00 am", name:"Mañana libre", rest:true, noMap:true, dur:"4 h",
+    desc:"Desayuno tranquilo, compras de último minuto cerca del hotel o una segunda vuelta a Don Quijote. Hagan el check-out y dejen las maletas en el hotel mientras tanto."},
+  {id:"airport", day:"mon2", time:"1:00 pm", name:"Salida al aeropuerto · vuelo de las 5:10 pm", rest:true, noMap:true, dur:"1–1.5 h",
+    desc:"Lleguen al aeropuerto 3 horas antes del vuelo. Si es Haneda, son unos 30–45 minutos en taxi o tren. Si es Narita, de 70 a 90 minutos: mejor salgan a las 12:30 pm.",
+    tips:["Si compraron libre de impuestos, pasen por el kiosco de aduana con el pasaporte antes de documentar las maletas, y lleven esas compras a la mano."]}
+];
+
+const AREAS=[
+  {t:"Río Han",lat:37.5225,lng:127.0120,water:true},{t:"Jongno",lat:37.5735,lng:127.0040},{t:"Gangnam",lat:37.5040,lng:127.0400},
+  {t:"Seongsu",lat:37.5490,lng:127.0470},{t:"Namsan",lat:37.5480,lng:126.9930},{t:"Itaewon",lat:37.5345,lng:126.9940},
+  {t:"Arashiyama",lat:35.0090,lng:135.6860},{t:"Río Kamo",lat:35.0200,lng:135.7700,water:true},
+  {t:"Kioto",lat:35.0000,lng:135.7350},{t:"Nara",lat:34.6810,lng:135.8250},{t:"Fushimi",lat:34.9580,lng:135.7650},
+  {t:"Río Sumida",lat:35.7000,lng:139.7935,water:true},{t:"Ginza",lat:35.6717,lng:139.7650},{t:"Ueno",lat:35.7130,lng:139.7740},{t:"Shinjuku",lat:35.6900,lng:139.7000},{t:"Roppongi",lat:35.6628,lng:139.7310},
+  {t:"Lago Kawaguchi",lat:35.5105,lng:138.7700,water:true},{t:"Fujiyoshida",lat:35.4850,lng:138.8100}
+];
+const REGIONS={
+  seoul:{bounds:[[37.493,126.950],[37.599,127.080]],minZoom:12,packs:{lo:"tiles-lo.json",15:"tiles-15.json",16:"tiles-16.json"},maps:"kr"},
+  kyoto:{bounds:[[34.63,135.62],[35.07,135.90]],minZoom:10,packs:{lo:"tiles-jp-lo.json",15:"tiles-jp-15.json",16:"tiles-jp-16.json"},maps:"jp"},
+  tokyo:{bounds:[[35.60,139.62],[35.76,139.88]],minZoom:11,packs:{lo:"tiles-tk-lo.json",15:"tiles-tk-15.json",16:"tiles-tk-16.json"},maps:"jp"},
+  fuji:{bounds:[[35.38,138.60],[35.60,138.92]],minZoom:10,packs:{lo:"tiles-fj-lo.json",15:"tiles-fj-15.json",16:"tiles-fj-16.json"},maps:"jp"}
+};
+const regionOf=d=>d.region||d.city;
+const CGC_WALK=[[37.5693,126.9780],[37.5691,126.9805],[37.5690,126.9830],[37.5688,126.9858],[37.5689,126.9880]];
+
+
+const DATES={sat:"2026-11-14",sun:"2026-11-15",mon:"2026-11-16",tue:"2026-11-17",wed:"2026-11-18",thu:"2026-11-19",fri:"2026-11-20",fri2:"2026-11-20",sat2:"2026-11-21",sun2:"2026-11-22",mon2:"2026-11-23"};
+const CITIES=[{id:"seoul",name:"Seúl",dates:"14–17 nov",country:"kr",tz:"Asia/Seoul"},{id:"kyoto",name:"Kioto",dates:"18–20 nov",country:"jp",tz:"Asia/Tokyo"},{id:"tokyo",name:"Tokio",dates:"20–23 nov",country:"jp",tz:"Asia/Tokyo"}];
+const PHRASES={
+  kr:[["Hola","안녕하세요","annyeonghaseyo"],["Gracias","감사합니다","gamsahamnida"],["Disculpe (para llamar al mesero)","저기요","jeogiyo"],["Somos 5 personas","다섯 명이에요","daseot myeong-ieyo"],["¿Cuánto cuesta?","얼마예요?","eolmayeyo?"],["¿Dónde está el baño?","화장실 어디예요?","hwajangsil eodiyeyo?"],["Sin picante, por favor","안 맵게 해 주세요","an maepge hae juseyo"],["La cuenta, por favor","계산해 주세요","gyesanhae juseyo"],["Lo siento","죄송합니다","joesonghamnida"]],
+  jp:[["Hola","こんにちは","konnichiwa"],["Gracias","ありがとうございます","arigatō gozaimasu"],["Disculpe / perdón","すみません","sumimasen"],["Somos 5 personas","5人です","go-nin desu"],["¿Cuánto cuesta?","いくらですか？","ikura desu ka?"],["¿Dónde está el baño?","トイレはどこですか？","toire wa doko desu ka?"],["La cuenta, por favor","お会計お願いします","okaikei onegaishimasu"],["¿Se puede pagar con tarjeta?","カードで払えますか？","kādo de haraemasu ka?"],["Asiento para mi abuela, por favor","祖母の席をお願いします","sobo no seki o onegaishimasu"]]
+};
+const SOS={
+  kr:[["Policía","112",""],["Ambulancia y bomberos","119",""],["Línea de ayuda al turista","1330","24 horas, con intérprete. Desde un teléfono extranjero: +82-2-1330"],["Embajada de EE. UU. en Seúl","+82-2-397-4114","También para emergencias fuera de horario"]],
+  jp:[["Policía","110",""],["Ambulancia y bomberos","119",""],["Japan Visitor Hotline","050-3816-2787","24 horas, en inglés. Desde un teléfono extranjero: +81-50-3816-2787"],["Embajada de EE. UU. en Tokio","+81-3-3224-5000",""],["Consulado de EE. UU. en Osaka","+81-6-6315-5900","Para la parte de Kioto"]]
+};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dayOf=id=>DAYS.find(d=>d.id===id);
+const cityOf=id=>CITIES.find(c=>c.id===id);
+const curOf=(c,s)=>c.cur||(dayOf(s.day).city==="seoul"?"KRW":"JPY");
+const fmtL=(n,cur)=>SYM[cur]+n.toLocaleString("en-US");
+const usdv=v=>"US$"+(v>=100?Math.round(v).toLocaleString("en-US"):v>=10?v.toFixed(0):v.toFixed(2));
+const usd=(n,cur)=>usdv(n/RATES[cur]);
+const UNIT={pp:"por persona",car:"por carro",item:"por porción",drink:"por bebida",group:"por grupo"};
+const WD=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const LONGWD=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+let store={}; try{store=JSON.parse(localStorage.getItem("seoul-done")||"{}");}catch(e){store={};}
+const save=()=>{try{localStorage.setItem("seoul-done",JSON.stringify(store));}catch(e){}};
+let current="sun"; try{const t=localStorage.getItem("seoul-tab"); if(t&&dayOf(t)) current=t;}catch(e){}
+let selected=null, region=null, NOW=null;
+const numbered={}; DAYS.forEach(d=>{let n=0; STOPS.filter(s=>s.day===d.id).forEach(s=>{if(!s.noMap){n++;numbered[s.id]=n;}});});
+const shortName=s=>({cdg:"Changdeokgung",huwon:"Jardín Secreto",bukchon:"Bukchon",insa:"Insadong",tower:"N Seoul Tower","gbg-cer":"Ceremonia",gbg:"Gyeongbokgung",tosok:"Tosokchon",cgc:"Cheonggyecheon",myeong:"Myeongdong",bong:"Bongeunsa",gstyle:"Gangnam Style",star:"Starfield Library",seongsu:"Seongsu",ddp:"DDP","kyoto-st":"Estación de Kioto",kinkaku:"Pabellón Dorado",gion:"Gion",inari:"Fushimi Inari",deer:"Venados de Nara",todaiji:"Todai-ji",bamboo:"Bosque de bambú",tenryuji:"Tenryu-ji",togetsu:"Togetsukyo",shinkansen:"Shinkansen","tokyo-st":"Estación de Tokio",sensoji:"Senso-ji",chureito:"Pagoda Chureito",oshino:"Oshino Hakkai",oishi:"Parque Oishi",yurari:"Onsen Yurari",ttower:"Torre de Tokio","shibuya-x":"Cruce de Shibuya",donki:"Don Quijote",sky:"Shibuya Sky"})[s.id]||s.name;
+const nativeOf=s=>(s.ko||s.ja||"");
+const plain=t=>t.replace(/\s*\(.*\)$/,"");
+const toMin=t=>{const m=/(\d+):(\d+)\s*(am|pm)/i.exec(t||""); if(!m) return null; let h=+m[1]%12; if(m[3].toLowerCase()==="pm") h+=12; return h*60+ +m[2];};
+const ICON={
+  route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>',
+  car:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>'
+};
+
+function groupCost(c){ if(!c.fixed||Array.isArray(c.k)) return 0; const x=c.x||1;
+  if(c.u==="pp") return (c.k*GROUP.adults + (c.s??c.k)*GROUP.seniors)*x; return c.k*x; }
+function dayTotal(id){ const t={KRW:0,JPY:0,USD:0,usd:0};
+  STOPS.filter(s=>s.day===id).forEach(s=>(s.cost||[]).forEach(c=>{ const g=groupCost(c); if(g){ const cur=curOf(c,s); t[cur]+=g; t.usd+=g/RATES[cur]; } })); return t; }
+const localStr=t=>["KRW","JPY","USD"].filter(c=>t[c]).map(c=>fmtL(t[c],c)).join(" + ");
+
+/* ---------- time & "hoy" ---------- */
+function zoned(tz){
+  const p={}; new Intl.DateTimeFormat("en-CA",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false,weekday:"short"}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);
+  const h=+p.hour%24; return {date:`${p.year}-${p.month}-${p.day}`,min:h*60+ +p.minute,h,m:+p.minute,wd:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(p.weekday)};
+}
+const clock=(z)=>{const h=z.h%12||12; return `${h}:${String(z.m).padStart(2,"0")} ${z.h<12?"am":"pm"}`;};
+function computeNow(){
+  const k=zoned("Asia/Seoul"); // Corea y Japón comparten UTC+9
+  const days=DAYS.filter(d=>DATES[d.id]===k.date);
+  let day=null; if(days.length===1) day=days[0]; else if(days.length>1) day=k.min<12*60+30?days[0]:days[1];
+  let cur=null,next=null;
+  if(day){ const st=STOPS.filter(s=>s.day===day.id); st.forEach(s=>{const t=toMin(s.time); if(t==null) return; if(t<=k.min) cur=s; else if(!next) next=s;}); }
+  return {k,day,cur,next};
+}
+function nowCardHTML(){
+  const n=NOW; const first="2026-11-14", last="2026-11-23";
+  const mia=zoned("America/New_York");
+  if(n.k.date<first){
+    const d=Math.round((Date.UTC(2026,10,14)-Date.UTC(+n.k.date.slice(0,4),+n.k.date.slice(5,7)-1,+n.k.date.slice(8,10)))/864e5);
+    const diff=((n.k.min-mia.min)+(n.k.date>mia.date?1440:n.k.date<mia.date?-1440:0))/60;
+    return `<div class="now"><div class="eyebrow">Antes del viaje</div>
+      <div class="big">Faltan ${d} ${d===1?"día":"días"} para Seúl</div>
+      <div class="line">Empieza el sábado 14 de noviembre: aterrizan en Incheon a las 4:40 pm.</div>
+      <div class="line">Ahora en Corea: <strong>${LONGWD[n.k.wd]} ${clock(n.k)}</strong> · Miami: ${LONGWD[mia.wd]} ${clock(mia)} · Corea va ${diff} horas adelante.</div></div>`;
+  }
+  if(n.k.date>last) return "";
+  const d=n.day; const city=cityOf(d.city).name;
+  const city2=regionOf(d)==="fuji"?"Monte Fuji":city;
+  let body;
+  if(n.next){
+    body=`<div class="big">Siguiente: ${esc(n.next.name)}</div><div class="line">A las <strong>${esc(n.next.time)}</strong>${n.cur?` · Ahora: ${esc(n.cur.name)}`:""}</div>
+      <div class="actions">${!n.next.noMap?`<a class="btn primary" href="${routeURL(n.next)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a><button class="btn" data-show="${n.next.id}">${ICON.pin}Ver en el mapa</button>`:`<button class="btn" data-goto="${n.next.id}">Ver detalles</button>`}</div>`;
+  } else {
+    const idx=DAYS.indexOf(d); const nd=DAYS[idx+1]; const nf=nd&&STOPS.find(s=>s.day===nd.id);
+    body=`<div class="big">${n.cur?esc(n.cur.name):"Día libre"}</div>${nf?`<div class="line">Mañana: <strong>${esc(nf.time)}</strong> · ${esc(nf.name)}</div>`:""}`;
+  }
+  return `<div class="now" style="--c:${d.c}"><div class="eyebrow"><span>Hoy · ${esc(d.tab)} ${DATES[d.id].slice(8)} · ${esc(city2)}</span><span class="clock">${clock(n.k)} hora local</span></div>${body}</div>`;
+}
+
+/* ---------- header ---------- */
+function renderHeader(){
+  const d=dayOf(current);
+  $("#cities").innerHTML=CITIES.map(c=>`<button class="city" role="tab" data-city="${c.id}" aria-selected="${c.id===d.city}"><b>${c.name}</b><small>${c.dates}</small></button>`).join("");
+  const todayId=NOW.day?NOW.day.id:null;
+  $("#days").innerHTML=DAYS.filter(x=>x.city===d.city).map(x=>{const [num,sub]=x.sub.split(" · "); const lab=regionOf(x)==="fuji"?"Fuji":(x.id==="fri"?"mañana":x.id==="fri2"?"tarde":x.id==="sat"?"llegada":x.id==="mon2"?"regreso":x.id==="wed"?"llegada":"");
+    return `<button class="day${x.id===todayId?" today":""}" role="tab" data-day="${x.id}" aria-selected="${x.id===current}" style="--c:${x.c}"><b>${x.tab} ${num}</b><small>${lab||"&nbsp;"}</small></button>`;}).join("");
+  const all=STOPS.filter(s=>!s.rest); const n=all.filter(s=>store[s.id]).length; const f=n/all.length;
+  $("#progress").innerHTML=`<svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--line)" stroke-width="4"/><circle cx="18" cy="18" r="15" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(f*94.2).toFixed(1)} 94.2" transform="rotate(-90 18 18)"/></svg>${n}/${all.length}`;
+  const ctry=cityOf(d.city).country;
+  $("#phrCountry").textContent=ctry==="kr"?"· coreano":"· japonés";
+  $("#sosCountry").textContent=ctry==="kr"?"· Corea":"· Japón";
+}
+function setHdr(){ const h=$("#top").getBoundingClientRect().height; document.documentElement.style.setProperty("--hdr",Math.round(h)+"px"); }
+
+/* ---------- map ---------- */
+let map=null, markers={}, routeLayer=null, baseLayers=[];
+const packs={};
+function loadPack(url){ if(!packs[url]) packs[url]=fetch(url).then(r=>{if(!r.ok) throw new Error(r.status); return r.json();}); return packs[url]; }
+function packFor(z){ const R=REGIONS[region]||REGIONS.seoul; return R.packs[z<=14?"lo":String(Math.min(z,16))]; }
+const BLANK="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+function initMap(){
+  if(typeof L==="undefined"){ $("#mapStatus").textContent="El mapa no cargó. Usen los botones de “Cómo llegar”."; return; }
+  map=L.map("map",{zoomControl:true,minZoom:10,maxZoom:18,maxBoundsViscosity:0.8,attributionControl:true,zoomSnap:1,zoomDelta:1,tap:true,fadeAnimation:false});
+  map.attributionControl.setPrefix(false);
+  const PackLayer=L.GridLayer.extend({ createTile(coords,done){
+    const img=document.createElement("img"); img.alt=""; img.setAttribute("role","presentation");
+    const key=`${coords.z}/${coords.x}/${coords.y}`;
+    loadPack(packFor(coords.z)).then(p=>{ const d=p[key]; img.src=d?("data:image/webp;base64,"+d):BLANK; img.onload=()=>done(null,img); img.onerror=()=>done(null,img); }).catch(()=>{ img.src=BLANK; done(null,img); });
+    return img; }});
+  baseLayers=[
+    new PackLayer({minZoom:10,maxZoom:18,minNativeZoom:10,maxNativeZoom:15,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(map),
+    new PackLayer({minZoom:15.5,maxZoom:18,minNativeZoom:16,maxNativeZoom:16}).addTo(map)];
+  AREAS.forEach(a=>L.marker([a.lat,a.lng],{interactive:false,keyboard:false,icon:L.divIcon({className:"area-label"+(a.water?" water":""),html:a.t,iconSize:null})}).addTo(map));
+  routeLayer=L.layerGroup().addTo(map);
+  const zl=()=>map.getContainer().classList.toggle("zoom-low",map.getZoom()<12); map.on("zoomend",zl); zl();
+  map.on("zoomend moveend",()=>setTimeout(declutter,0));
+  map.on("click",()=>{ if(selected){ selected=null; refreshSel(); } });
+  new ResizeObserver(()=>map.invalidateSize(false)).observe($(".map-box"));
+}
+function setRegion(r){
+  if(!map||region===r) return; region=r; const R=REGIONS[r];
+  map.setMaxBounds(L.latLngBounds(R.bounds).pad(0.15)); map.setMinZoom(R.minZoom);
+  $("#mapStatus").hidden=false; $("#mapStatus").textContent="Cargando mapa…";
+  Promise.all([loadPack(R.packs.lo),loadPack(R.packs[15])]).then(()=>{ if(region===r) $("#mapStatus").hidden=true; loadPack(R.packs[16]); })
+    .catch(()=>{$("#mapStatus").textContent="El fondo del mapa no cargó; los puntos sí funcionan.";});
+  baseLayers.forEach(l=>l.redraw());
+}
+function routeURL(s){
+  if(dayOf(s.day).city==="seoul") return `https://map.kakao.com/link/to/${encodeURIComponent(plain(s.ko||s.name))},${s.lat},${s.lng}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=transit`;
+}
+function nearbyURL(){
+  const d=dayOf(current);
+  return d.city==="seoul"?"https://map.kakao.com/":"https://www.google.com/maps/@?api=1&map_action=map";
+}
+function pinIcon(s){
+  const d=dayOf(s.day); const cls=["pin"]; if(s.labelLeft) cls.push("left"); if(selected===s.id) cls.push("sel"); if(store[s.id]) cls.push("done"); if(NOW.next&&NOW.next.id===s.id) cls.push("next");
+  return L.divIcon({className:"",iconSize:[28,28],iconAnchor:[14,14],popupAnchor:[0,-14],
+    html:`<div class="${cls.join(" ")}" style="--c:${d.c}"><b>${numbered[s.id]}</b><span>${esc(shortName(s))}</span></div>`});
+}
+function popupHTML(s){
+  const d=dayOf(s.day);
+  return `<div style="--c:${d.c}"><div class="pop-time">${esc(s.time)} · ${esc(d.tab)} ${DATES[d.id].slice(8)}</div><div class="pop-name">${esc(s.name)}</div>${nativeOf(s)?`<div class="pop-ko">${esc(nativeOf(s))}</div>`:""}
+    <div class="pop-meta">${esc(s.dur||"")}${s.pace?" · "+esc(s.pace):""}</div>
+    <div class="pop-actions"><a class="btn primary" href="${routeURL(s)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a>
+    <button class="btn" data-goto="${s.id}">Detalles</button></div></div>`;
+}
+function getCss(v){ const m=v.match(/var\((--[^)]+)\)/); return m?getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim():v; }
+function drawMap(refit){
+  if(!map) return;
+  setRegion(regionOf(dayOf(current)));
+  map.closePopup(); const old=markers; markers={}; Object.values(old).forEach(m=>{m.off(); m.remove();}); routeLayer.clearLayers();
+  const list=STOPS.filter(s=>s.day===current && !s.noMap); const d=dayOf(current);
+  if(list.length>1) L.polyline(list.map(s=>[s.lat,s.lng]),{color:getCss(d.c),weight:3,opacity:.85,dashArray:"7 7",interactive:false}).addTo(routeLayer);
+  if(current==="mon") L.polyline(CGC_WALK,{color:getCss(d.c),weight:8,opacity:.35,interactive:false}).addTo(routeLayer);
+  list.forEach(s=>{
+    const m=L.marker([s.lat,s.lng],{icon:pinIcon(s),riseOnHover:true,title:s.name,zIndexOffset:selected===s.id?1000:0}).addTo(map);
+    m.bindPopup(popupHTML(s),{closeButton:true,autoPanPadding:[20,60]});
+    m.on("click",()=>{ selected=s.id; refreshSel(); });
+    m.on("popupclose",()=>{ if(selected===s.id && markers[s.id]===m){ selected=null; refreshSel(); } });
+    markers[s.id]=m;
+  });
+  $("#nearby").href=nearbyURL(); $("#nearby").innerHTML=ICON.pin+"Dónde estoy";
+  if(refit) fitDay(true); else setTimeout(declutter,0);
+}
+function fitDay(anim){
+  if(!map) return;
+  const list=STOPS.filter(s=>s.day===current && !s.noMap);
+  if(!list.length){ const b=L.latLngBounds(REGIONS[regionOf(dayOf(current))].bounds); map.setView(b.getCenter(),12,{animate:anim}); return; }
+  map.fitBounds(L.latLngBounds(list.map(s=>[s.lat,s.lng])),{paddingTopLeft:[40,70],paddingBottomRight:[110,40],maxZoom:16,animate:anim});
+}
+function declutter(){
+  if(!map) return;
+  const ids=Object.keys(markers);
+  const circles=ids.map(id=>{const e=markers[id].getElement(); const b=e&&e.querySelector(".pin b"); return b?{id,r:b.getBoundingClientRect()}:null;}).filter(Boolean);
+  const hit=(a,b)=>!(a.right+2<b.left||b.right+2<a.left||a.bottom+2<b.top||b.bottom+2<a.top);
+  const kept=[];
+  [...ids].sort((a,b)=>(b===selected)-(a===selected)).forEach(id=>{
+    const e=markers[id].getElement(); const sp=e&&e.querySelector(".pin span"); if(!sp) return;
+    sp.style.visibility="visible"; const r=sp.getBoundingClientRect();
+    const clash=id!==selected && (kept.some(k=>hit(k,r)) || circles.some(c=>c.id!==id && hit(c.r,r)));
+    if(clash) sp.style.visibility="hidden"; else kept.push(r);
+  });
+}
+
+/* ---------- list ---------- */
+function costHTML(c,s){
+  const cur=curOf(c,s);
+  const w=Array.isArray(c.k)?`${fmtL(c.k[0],cur)}–${c.k[1].toLocaleString("en-US")}`:(c.k===0?"Gratis":fmtL(c.k,cur));
+  const u=(c.k===0||cur==="USD")?"":(Array.isArray(c.k)?`${usd(c.k[0],cur)}–${usd(c.k[1],cur).replace("US$","")}`:usd(c.k,cur));
+  const grp=(c.u==="pp"&&c.k!==0)?(Array.isArray(c.k)?`los 5: ${usd(c.k[0]*5,cur)}–${usd(c.k[1]*5,cur).replace("US$","")}`:`los 5: ${usd((c.k*GROUP.adults+(c.s??c.k)*GROUP.seniors)*(c.x||1),cur)}`):"";
+  const unit=c.k===0?"":(UNIT[c.u]||"");
+  return `<div class="cost"><span class="lbl">${esc(c.l)}</span><span class="amt"><b>${w}</b>${u?` ≈ <span class="usd">${u}</span>`:""}</span>
+    <span class="sub">${[unit,grp,c.n].filter(Boolean).map(esc).join(" · ")}</span></div>`;
+}
+function costHint(s){
+  const cs=s.cost||[]; if(!cs.length) return "";
+  const main=cs.find(c=>c.fixed)||cs[0]; const cur=curOf(main,s);
+  if(main.k===0) return "Gratis";
+  const v=Array.isArray(main.k)?`${fmtL(main.k[0],cur)}–${main.k[1].toLocaleString("en-US")}`:fmtL(main.k,cur);
+  return v+(cur!=="USD"?` · ${Array.isArray(main.k)?usd(main.k[0],cur)+"+":usd(main.k,cur)}`:"");
+}
+function stopHTML(s){
+  const d=dayOf(s.day), done=!!store[s.id], jp=d.city!=="seoul";
+  const isNext=NOW.next&&NOW.next.id===s.id;
+  const q=encodeURIComponent(plain(s.ko||s.name));
+  const nat=nativeOf(s);
+  const main=s.noMap?"":`<a class="btn primary" href="${routeURL(s)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a>${nat?`<button class="btn" data-taxi="${s.id}">${ICON.car}Taxi</button>`:""}`;
+  const extraLinks=s.noMap?"":jp?`<a class="btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((s.en||s.name)+' Japan')}" target="_blank" rel="noopener">Ver en Google Maps</a>`
+    :`<a class="btn" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener">Naver Map</a><a class="btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((s.en||s.name)+' Seoul')}" target="_blank" rel="noopener">Google</a>`;
+  const hasMore=(s.tips&&s.tips.length)||(s.cost&&s.cost.length)||extraLinks;
+  const hint=costHint(s);
+  return `<li class="stop${s.rest?" rest":""}${done?" done":""}${selected===s.id?" sel":""}${isNext?" next":""}" id="stop-${s.id}" style="--c:${d.c}">
+    <div class="rail">${s.noMap?`<span class="num" aria-hidden="true">·</span>`:`<button class="num" data-show="${s.id}" aria-label="Ver ${esc(shortName(s))} en el mapa">${numbered[s.id]}</button>`}</div>
+    <div class="card">
+      <div class="time">${esc(s.time)}${isNext?'<span class="tag next">Siguiente</span>':""}${s.optional?'<span class="tag">Opcional</span>':""}</div>
+      <h3>${esc(s.name)}</h3>
+      ${nat&&!s.noMap?`<div class="native">${esc(nat)}</div>`:""}
+      ${(s.dur||s.pace)?`<div class="chips">${s.dur?`<span class="chip">${esc(s.dur)}</span>`:""}${s.pace?`<span class="chip${s.hill?" hill":""}">${esc(s.pace)}</span>`:""}</div>`:""}
+      ${s.desc?`<p>${esc(s.desc)}</p>`:""}
+      ${(main||!s.rest)?`<div class="actions">${main}${s.rest?"":`<button class="btn check" data-done="${s.id}" aria-pressed="${done}" aria-label="Marcar como hecho" title="Marcar como hecho">${ICON.check}${done?"Hecho":""}</button>`}</div>`:""}
+      ${hasMore?`<details class="more"><summary><span>Consejos${s.cost&&s.cost.length?" y costos":""}</span>${hint?`<span class="hint">${esc(hint)}</span>`:""}</summary>
+        ${s.tips?`<ul>${s.tips.map(t=>`<li>${t}</li>`).join("")}</ul>`:""}
+        ${s.cost?`<div class="costs">${s.cost.map(c=>costHTML(c,s)).join("")}</div>`:""}
+        ${extraLinks?`<div class="links">${extraLinks}</div>`:""}
+      </details>`:""}
+    </div></li>`;
+}
+function dayHTML(d){
+  const list=STOPS.filter(s=>s.day===d.id); const t=dayTotal(d.id);
+  return `<section style="--c:${d.c}">
+    <div class="day-head"><span class="eyebrow">${esc(d.eyebrow)}</span><h2>${esc(d.title)}</h2><p>${esc(d.intro)}</p></div>
+    ${d.note?`<div class="note">${esc(d.note)}</div>`:""}
+    ${t.usd?`<div class="daycost"><span class="k">Entradas y transporte fijo, los 5</span><span><strong>${localStr(t)}</strong> <span class="usd">≈ ${usdv(t.usd)}</span></span></div>`:""}
+    <ol class="stops">${list.map(stopHTML).join("")}</ol></section>`;
+}
+function renderGuide(){
+  const ctry=cityOf(dayOf(current).city).country;
+  $("#phrases").innerHTML=PHRASES[ctry].map((p,i)=>`<button class="phrase" data-phr="${ctry}:${i}"><span class="es">${esc(p[0])}</span><span class="nat">${esc(p[1])}</span><span class="rom">${esc(p[2])}</span><span class="go">Mostrar</span></button>`).join("");
+  $("#sos").innerHTML=SOS[ctry].map(r=>`<div class="sos-row"><div>${esc(r[0])}${r[2]?`<small>${esc(r[2])}</small>`:""}</div><span class="n">${esc(r[1])}</span><button class="copy" data-copy="${esc(r[1])}">Copiar</button></div>`).join("");
+}
+function renderCostTable(){
+  $("#rateNote").textContent=`Tipo de cambio: US$1 = ₩${RATES.KRW.toLocaleString("en-US")} (24 oct 2026) y ¥${RATES.JPY} (23 oct 2026).`;
+  let rows="", tot=0;
+  DAYS.forEach(d=>{ const t=dayTotal(d.id); tot+=t.usd; const [num,sub]=d.sub.split(" · "); rows+=`<tr><td>${d.tab} ${num} <span class="muted">${sub}</span></td><td>${t.usd?localStr(t):"—"}</td><td>${t.usd?usdv(t.usd):"—"}</td><td>${t.usd?usdv(t.usd/5):"—"}</td></tr>`; });
+  $("#costTable").innerHTML=`<thead><tr><th>Día</th><th>Los 5</th><th>US$</th><th>C/u</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>Total</td><td></td><td>${usdv(tot)}</td><td>${usdv(tot/5)}</td></tr></tfoot>`;
+  $("#costSum").textContent=`· ${usdv(tot)} los 5`;
+}
+function renderNow(){ NOW=computeNow(); $("#nowWrap").innerHTML=nowCardHTML(); $("#nowWrap").hidden=!$("#nowWrap").innerHTML; }
+function renderAll(refit){ renderHeader(); renderGuide(); $("#list").innerHTML=dayHTML(dayOf(current)); drawMap(refit); setHdr(); }
+function setDay(id,refit=true){ current=id; selected=null; try{localStorage.setItem("seoul-tab",id);}catch(e){} renderAll(refit); }
+function refreshSel(){
+  document.querySelectorAll(".stop.sel").forEach(n=>n.classList.remove("sel"));
+  if(selected){ const n=$("#stop-"+selected); n&&n.classList.add("sel"); }
+  Object.entries(markers).forEach(([id,m])=>{ const s=STOPS.find(x=>x.id===id); m.setIcon(pinIcon(s)); m.setZIndexOffset(selected===id?1000:0); });
+  setTimeout(declutter,0);
+}
+const wide=()=>matchMedia("(min-width:700px)").matches||matchMedia("(horizontal-viewport-segments: 2)").matches||matchMedia("(vertical-viewport-segments: 2)").matches;
+function showOnMap(id){
+  const s=STOPS.find(x=>x.id===id); if(!s||!map||s.noMap) return;
+  if(s.day!==current){ current=s.day; renderAll(false); }
+  selected=id; refreshSel();
+  if(!wide()) $(".map-box").scrollIntoView({behavior:"smooth",block:"center"});
+  map.flyTo([s.lat,s.lng],Math.max(map.getZoom(),16),{duration:.6});
+  setTimeout(()=>markers[id]&&markers[id].openPopup(),650);
+}
+function gotoCard(id){
+  const s=STOPS.find(x=>x.id===id); if(s&&s.day!==current){ current=s.day; renderAll(false); }
+  map&&map.closePopup(); selected=id; refreshSel();
+  const n=$("#stop-"+id); if(n) n.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function openShow(ask,big,sub,es){ $("#s-ask").textContent=ask; $("#s-big").textContent=big; $("#s-sub").textContent=sub||""; $("#s-es").textContent=es||""; $("#show").hidden=false; $("#s-close").focus(); }
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.city){ const d=(NOW.day&&NOW.day.city===b.dataset.city)?NOW.day:DAYS.find(x=>x.city===b.dataset.city); setDay(d.id); }
+  else if(b.dataset.day){ setDay(b.dataset.day); }
+  else if(b.dataset.done){ const id=b.dataset.done; store[id]=!store[id]; if(!store[id]) delete store[id]; save();
+    const n=$("#stop-"+id); n.classList.toggle("done",!!store[id]); b.setAttribute("aria-pressed",!!store[id]); b.innerHTML=ICON.check+(store[id]?"Hecho":""); renderHeader(); refreshSel(); }
+  else if(b.dataset.show){ showOnMap(b.dataset.show); }
+  else if(b.dataset.goto){ gotoCard(b.dataset.goto); }
+  else if(b.dataset.taxi){ const s=STOPS.find(x=>x.id===b.dataset.taxi); const nm=nativeOf(s); openShow(s.ja?"ここまでお願いします":"여기로 가주세요", plain(nm), s.addr||(nm.match(/\((.*)\)/)||[])[1]||"", s.name+" · muéstrenle esto al taxista"); }
+  else if(b.dataset.phr){ const [c,i]=b.dataset.phr.split(":"); const p=PHRASES[c][+i]; openShow("", p[1], p[2], p[0]); }
+  else if(b.dataset.copy){ const v=b.dataset.copy; const ok=()=>{b.textContent="Copiado"; setTimeout(()=>b.textContent="Copiar",1500);};
+    try{ navigator.clipboard.writeText(v).then(ok,()=>{ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); }); }catch(err){ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); } }
+});
+$("#fit").onclick=()=>{ map&&map.closePopup(); fitDay(true); };
+$("#s-close").onclick=()=>{$("#show").hidden=true;};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#show").hidden=true;});
+new ResizeObserver(setHdr).observe($("#top"));
+
+renderNow();
+if(NOW.day) current=NOW.day.id;
+initMap(); renderCostTable(); renderAll(false); fitDay(false);
+setInterval(()=>{ const prev=NOW.next&&NOW.next.id; renderNow(); if((NOW.next&&NOW.next.id)!==prev){ $("#list").innerHTML=dayHTML(dayOf(current)); refreshSel(); renderHeader(); } },60000);
+})();
+</script>
