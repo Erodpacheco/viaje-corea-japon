@@ -128,6 +128,24 @@ h1{font-family:var(--f-display);font-size:clamp(1.15rem,5vw,1.4rem);margin:0;fon
 .day-head .eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--c)}
 .day-head h2{font-family:var(--f-display);font-size:1.3rem;margin:0;text-wrap:balance;line-height:1.25}
 .day-head p{margin:0;color:var(--muted);font-size:.9rem;max-width:62ch}
+.hotel{margin-top:12px;border:1.5px solid var(--accent);background:var(--surface);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;scroll-margin-top:calc(var(--hdr,0px) + 12px)}
+.hotel .h-top{display:flex;gap:10px;align-items:flex-start}
+.hotel .h-ico{flex:0 0 36px;height:36px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.hotel .h-ico svg{width:20px;height:20px}
+.hotel .h-eyebrow{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.hotel .h-eyebrow b{color:var(--warn-ink)}
+.hotel h3{margin:2px 0 0;font-size:1.02rem;line-height:1.3}
+.hotel .native{font-size:.95rem;margin-top:2px}
+.hotel .h-addr,.hotel .h-kind{font-size:.8rem;color:var(--muted)}
+.hotel .h-times{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hotel .h-times div{background:var(--bg);border-radius:9px;padding:6px 10px;display:flex;flex-direction:column}
+.hotel .h-times span{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.hotel .h-times b{font-size:.86rem}
+.hotel .actions{margin:0}
+.hotel details.more{margin:0}
+.pin.hotel-pin b{background:var(--ink);color:var(--surface);display:grid;place-items:center;width:30px;height:30px;flex-basis:30px;border-radius:9px}
+.pin.hotel-pin b svg{width:17px;height:17px}
+tr.lodge td:first-child{font-weight:600}
 .note{margin-top:10px;background:var(--warn-bg);color:var(--warn-ink);border-radius:10px;padding:9px 12px;font-size:.86rem}
 .daycost{margin-top:10px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;align-items:baseline;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;font-size:.84rem}
 .daycost .k{color:var(--muted)}
@@ -284,7 +302,7 @@ tfoot td{font-weight:700;border-bottom:0}
         <details id="g-cost"><summary><span>Costos del viaje <small id="costSum"></small></span></summary>
           <p class="muted" id="rateNote"></p>
           <div class="tbl-wrap"><table id="costTable"></table></div>
-          <p class="muted">Solo cuenta entradas y transporte con precio fijo, para 4 adultos y 1 persona mayor de 65. Comidas y compras van aparte; sus precios aproximados están en cada parada.</p>
+          <p class="muted">Cuenta los 3 hoteles, las entradas y el transporte con precio fijo, para 4 adultos y 1 persona mayor de 65. Comidas y compras van aparte; sus precios aproximados están en cada parada.</p>
         </details>
         <details id="g-prep"><summary><span>Antes de ir y en el día a día</span></summary>
           <ul>
@@ -350,10 +368,11 @@ const DAYS = [
     intro:"Fushimi Inari temprano, antes de la ceremonia del té de las 11:30 am. En la tarde, tren a Nara para los venados y el Gran Buda de Todai-ji, que cierra a las 5:00 pm.",
     note:"Me falta la dirección de la ceremonia del té. Supuse que es en el centro de Kioto; si es en Uji o en Nara, el día cambia y lo ajusto."},
   {id:"fri", city:"kyoto", tab:"Vie", sub:"20 · Kioto", c:"var(--d-fri)", eyebrow:"Viernes 20 en la mañana · Kioto", title:"Bosque de bambú y shinkansen",
-    intro:"El bosque de bambú se llena desde las 9:30 am, así que van primero. Vuelven a la estación de Kioto hacia las 10:30 am y toman el shinkansen de las 11:00 am; llegan a Tokio hacia la 1:15 pm."},
+    intro:"El bosque de bambú se llena desde las 9:30 am, así que van primero. Vuelven a la estación de Kioto hacia las 10:30 am y toman el shinkansen de las 11:00 am; llegan a Tokio hacia la 1:15 pm.",
+    note:"La salida del hotel es antes de las 10:00 am y no van a volver. Hagan el check-out al salir (hacia las 7:00 am), caminen 8 minutos a la estación y dejen las maletas en los casilleros del lado Hachijo, que es donde toman el shinkansen."},
   {id:"fri2", city:"tokyo", tab:"Vie", sub:"20 · Tokio", c:"var(--d-fri2)", eyebrow:"Viernes 20 en la tarde · Tokio", title:"Llegada y Asakusa",
     intro:"Llegan a la estación de Tokio hacia la 1:15 pm, dejan las maletas en el hotel y van al templo Senso-ji en Asakusa. En Tokio el sol se pone hacia las 4:30 pm y el templo se ilumina de noche.",
-    note:"Me falta la dirección del hotel de Tokio. Cuando me la mandes, la pongo en el mapa y ajusto los traslados."},
+    note:"El hotel está en Shibamata, al este de Tokio: de la estación al hotel son unos 40 minutos. Lleguen al Senso-ji hacia las 3:30 pm; todavía les da tiempo antes de que cierre la sala principal a las 5:00 pm."},
   {id:"sat2", city:"tokyo", region:"fuji", tab:"Sáb", sub:"21 · Fuji", c:"var(--d-sat2)", eyebrow:"Sábado 21 · excursión al monte Fuji", title:"Monte Fuji y onsen",
     intro:"Día completo en van privada con chofer: la pagoda Chureito, el pueblo de Oshino Hakkai, el lago Kawaguchi y un onsen con vista al Fuji. Salen a las 7:30 am y vuelven a Tokio hacia las 5:30 pm.",
     note:"El Fuji se ve mejor en la mañana y con cielo despejado. Revisen el pronóstico el jueves: si el sábado sale nublado, cambien este día completo por el domingo."},
@@ -367,10 +386,10 @@ const DAYS = [
 /* cost: {l:label, k:₩ (or [min,max]), u:"pp"|"car"|"item"|"drink"|"ride", s:senior ₩, fixed:true counts in totals, n:note, x:multiplier for totals} */
 const STOPS = [
   {id:"arr", day:"sat", time:"4:40 pm", name:"Aeropuerto de Incheon → hotel", ko:"인천국제공항", rest:true, noMap:true, dur:"1.5–2.5 h", pace:"Fácil",
-    desc:"Con 5 personas, maletas y la abuela, lo más cómodo es un taxi tipo van directo al hotel. La alternativa más barata es el tren AREX Express a Seoul Station (43 min) y de ahí taxi.",
+    desc:"Con 5 personas, maletas y la abuela, lo más cómodo es un taxi tipo van directo al hotel en Mapo (unos 60–70 minutos). La alternativa más barata es el tren AREX de todas las paradas hasta Hongik Univ. (unos 50 minutos) y de ahí un taxi corto.",
     tips:["Cena ligera cerca del hotel y a dormir.","Compren las tarjetas T-money en el 7-Eleven o GS25 del aeropuerto."],
-    cost:[{l:"Taxi al centro",k:[60000,80000],u:"car",n:"Por carro. Con 5 personas y maletas serán 2 carros o una van (cuesta más)."},
-          {l:"AREX Express (alternativa)",k:11000,u:"pp"},
+    cost:[{l:"Taxi al hotel en Mapo",k:[55000,75000],u:"car",n:"Aprox., por carro. Con 5 personas y maletas serán 2 carros o una van (cuesta más)."},
+          {l:"AREX de todas las paradas hasta Hongik Univ. (alternativa)",k:4500,u:"pp",n:"Aprox."},
           {l:"Tarjeta T-money",k:4000,u:"pp",fixed:true,n:"Costo de la tarjeta; aparte se recarga."}]},
 
   {id:"cdg", day:"sun", time:"9:00 am", name:"Palacio Changdeokgung", ko:"창덕궁", addr:"서울 종로구 율곡로 99",
@@ -454,7 +473,7 @@ const STOPS = [
     cost:[{l:"Plaza exterior",k:0,u:"pp",n:"Las exposiciones adentro se pagan aparte."},{l:"Metro Seongsu → DDP",k:1550,u:"pp",fixed:true}]},
 
   {id:"icn-dep", day:"wed", time:"4:00 am", name:"Salida del hotel al aeropuerto de Incheon", ko:"인천국제공항 제1여객터미널", rest:true, noMap:true, dur:"1 h", pace:"Taxi",
-    desc:"A esa hora no hay trenes al aeropuerto que lleguen a tiempo, así que vayan en taxi. Reserven desde el martes una van o dos taxis por Kakao T o con la recepción del hotel.",
+    desc:"A esa hora no hay trenes al aeropuerto que lleguen a tiempo, así que vayan en taxi: desde Mapo son unos 50 minutos de madrugada. Reserven desde el martes una van o dos taxis por Kakao T o pídanle ayuda al anfitrión.",
     tips:["Confirmen la terminal de su aerolínea (T1 o T2) en el boleto."],
     cost:[{l:"Taxi al aeropuerto",k:[60000,80000],u:"car",cur:"KRW",n:"Aprox., por carro. Puede tener recargo nocturno."}]},
   {id:"flight", day:"wed", time:"7:00 am", name:"Vuelo Seúl → Osaka Kansai (KIX)", rest:true, noMap:true, dur:"1 h 45 min",
@@ -465,7 +484,7 @@ const STOPS = [
     cost:[{l:"HARUKA One-way Ticket",k:2200,u:"pp",fixed:true,n:"Precio para turistas con pasaporte."}]},
   {id:"kyoto-st", day:"wed", time:"11:30 am", name:"Estación de Kioto: maletas y almuerzo", ja:"京都駅", addr:"京都府京都市下京区東塩小路町",
     lat:34.9858, lng:135.7588, dur:"1.5 h", pace:"Plano, techado", en:"Kyoto Station",
-    desc:"Dejen las maletas en el hotel aunque el check-in sea más tarde, o en el depósito de equipaje de la estación. Almuercen en la estación: los pisos de restaurantes de Kyoto Porta y del edificio Isetan tienen de todo y con asientos.",
+    desc:"El hotel (JPRESERVE Hachijoguchi) está a 8 minutos a pie por la salida sur Hachijo. Dejen ahí las maletas si el anfitrión lo permite antes de las 3:00 pm; si no, en los casilleros o el depósito de equipaje de la estación. Almuercen en la estación: los pisos de restaurantes de Kyoto Porta y del edificio Isetan tienen de todo y con asientos.",
     tips:["Del hotel o la estación al Pabellón Dorado: taxi de 20–25 minutos (2 taxis)."],
     cost:[{l:"Almuerzo",k:[1500,3000],u:"pp",n:"Aprox."}]},
   {id:"kinkaku", day:"wed", time:"1:30 pm", name:"Pabellón Dorado (Kinkaku-ji)", ja:"金閣寺", addr:"京都府京都市北区金閣寺町1",
@@ -524,17 +543,18 @@ const STOPS = [
 
   {id:"tokyo-st", day:"fri2", time:"1:15 pm", name:"Estación de Tokio → hotel", ja:"東京駅", addr:"東京都千代田区丸の内1丁目",
     lat:35.6812, lng:139.7671, dur:"1 h", pace:"Plano, techado", en:"Tokyo Station",
-    desc:"Del andén del shinkansen salgan por el lado Marunouchi, el edificio de ladrillo rojo, y tomen 2 taxis al hotel para dejar las maletas.",
-    cost:[{l:"Taxi al hotel",k:[1500,3000],u:"car",n:"Aprox., por carro; depende de dónde esté el hotel."}]},
-  {id:"sensoji", day:"fri2", time:"3:00 pm", name:"Templo Senso-ji y calle Nakamise", ja:"浅草寺", addr:"東京都台東区浅草2-3-1",
+    desc:"Tomen 2 taxis o un taxi van al hotel en Shibamata, al este de la ciudad (unos 35–45 minutos), para dejar las maletas. Si el check-in todavía no abre, pregúntenle al anfitrión si pueden dejarlas antes.",
+    tips:["En la parada de taxis, muestren la dirección del hotel con el botón Taxi de la tarjeta del hotel."],
+    cost:[{l:"Taxi al hotel en Shibamata",k:[6000,8000],u:"car",n:"Aprox., por carro."}]},
+  {id:"sensoji", day:"fri2", time:"3:30 pm", name:"Templo Senso-ji y calle Nakamise", ja:"浅草寺", addr:"東京都台東区浅草2-3-1",
     lat:35.7148, lng:139.7967, dur:"3 h con cena", pace:"Plano", en:"Sensoji Temple",
     desc:"El templo más antiguo de Tokio. Entren por la puerta Kaminarimon, la del farol rojo gigante, y caminen la calle Nakamise con sus puestos de dulces y recuerdos hasta el templo. La sala principal cierra a las 5:00 pm, así que lleguen antes de las 4:30. Después del atardecer el templo y la pagoda se iluminan. Cenen en Asakusa.",
-    tips:["Metro: Asakusa, línea Ginza. En taxi desde el centro, unos 20 minutos.","Los puestos de Nakamise abren más o menos de 9:00 am a 7:00 pm.","La suerte en papel (omikuji) cuesta ¥100: si sale mala, se deja amarrada en el templo."],
+    tips:["Desde el hotel: tren Keisei Kanamachi de Shibamata a Keisei-Takasago y ahí el directo a Asakusa (línea Toei Asakusa), unos 25 minutos. En taxi, también unos 25 minutos.","Los puestos de Nakamise abren más o menos de 9:00 am a 7:00 pm.","La suerte en papel (omikuji) cuesta ¥100: si sale mala, se deja amarrada en el templo."],
     cost:[{l:"Entrada",k:0,u:"pp"},{l:"Cena",k:[2000,4000],u:"pp",n:"Aprox."}]},
 
   {id:"fuji-pick", day:"sat2", time:"7:30 am", name:"Recogida en el hotel: van privada al Fuji", rest:true, noMap:true, dur:"9.5 h", pace:"Sentados",
     desc:"Con la abuela, una van privada para los 5 es mucho más cómoda que el bus de tour: los recoge en el hotel, paran donde quieran y pueden incluir el onsen, que los buses no hacen. Pidan al reservar este orden de paradas: Chureito, Oshino Hakkai, parque Oishi y onsen Yurari.",
-    tips:["Reserven con anticipación; hay varios operadores en GoWithGuide, Viator y Klook.","La alternativa barata es el bus de tour desde Shinjuku o la estación de Tokio, unos US$28 por persona, pero con horario fijo y sin onsen.","Lleven abrigo: en el Fuji hace bastante más frío que en Tokio."],
+    tips:["Denle al chofer la dirección del hotel en Shibamata. Desde ahí al Fuji son unas 2–2.5 horas, así que pregunten si conviene salir a las 7:00 am.","Reserven con anticipación; hay varios operadores en GoWithGuide, Viator y Klook.","La alternativa barata es el bus de tour desde Shinjuku o la estación de Tokio, unos US$28 por persona, pero con horario fijo y sin onsen.","Lleven abrigo: en el Fuji hace bastante más frío que en Tokio."],
     cost:[{l:"Van privada hasta 5 personas",k:440,u:"group",cur:"USD",fixed:true,n:"Precio de un operador en GoWithGuide para 9.5 h; incluye gasolina, peajes y chofer que habla inglés. Las horas extra se cobran aparte."}]},
   {id:"chureito", day:"sat2", time:"9:30 am", name:"Pagoda Chureito", ja:"新倉山浅間公園 忠霊塔",
     lat:35.5012, lng:138.8016, dur:"1 h", pace:"Casi 400 escalones", hill:true, en:"Chureito Pagoda",
@@ -554,7 +574,7 @@ const STOPS = [
     tips:["Antes de entrar al agua hay que lavarse sentado en las duchas. La toallita pequeña no se mete al agua y el pelo largo va amarrado.","Para la abuela: que entre despacio, no más de 10–15 minutos seguidos en el agua caliente y que tome agua.","Muchos onsen no permiten tatuajes visibles; si alguien tiene, confírmenlo antes.","Si prefieren bañarse todos juntos, en Hakone está Yunessun, un onsen con traje de baño, pero queda en otra excursión."],
     cost:[{l:"Entrada fin de semana, con toalla",k:1700,u:"pp",fixed:true}]},
   {id:"fuji-back", day:"sat2", time:"3:30 pm", name:"Regreso a Tokio", rest:true, noMap:true, dur:"2 h",
-    desc:"Llegan al hotel hacia las 5:30 pm. Cena tranquila cerca del hotel."},
+    desc:"Llegan al hotel hacia las 6:00 pm. Cena tranquila en Shibamata."},
 
   {id:"ttower", day:"sun2", time:"9:30 am", name:"Torre de Tokio", ja:"東京タワー", addr:"東京都港区芝公園4-2-8",
     lat:35.6586, lng:139.7454, dur:"1 h", pace:"Elevador", en:"Tokyo Tower",
@@ -578,9 +598,9 @@ const STOPS = [
     cost:[{l:"Entrada en línea, turno de tarde",k:3400,u:"pp",fixed:true,n:"En taquilla cuesta ¥3,700."}]},
 
   {id:"mon-am", day:"mon2", time:"9:00 am", name:"Mañana libre", rest:true, noMap:true, dur:"4 h",
-    desc:"Desayuno tranquilo, compras de último minuto cerca del hotel o una segunda vuelta a Don Quijote. Hagan el check-out y dejen las maletas en el hotel mientras tanto."},
+    desc:"Desayuno tranquilo y paseo a pie por el templo Shibamata Taishakuten (6 minutos del hotel, abre a las 9:00 am): tiene tallas de madera famosas y una calle de tiendas antiguas con dulces de arroz (dango). La salida del hotel es antes de las 11:00 am; pregunten si pueden dejar las maletas hasta la 1:00 pm."},
   {id:"airport", day:"mon2", time:"1:00 pm", name:"Salida al aeropuerto · vuelo de las 5:10 pm", rest:true, noMap:true, dur:"1–1.5 h",
-    desc:"Lleguen al aeropuerto 3 horas antes del vuelo. Si es Haneda, son unos 30–45 minutos en taxi o tren. Si es Narita, de 70 a 90 minutos: mejor salgan a las 12:30 pm.",
+    desc:"Lleguen al aeropuerto 3 horas antes del vuelo. Desde Shibamata, Narita queda más fácil de lo que parece: tren Keisei desde Keisei-Takasago, unos 45–60 minutos. A Haneda son unos 60 minutos en tren directo desde Keisei-Takasago o 45–60 en taxi.",
     tips:["Si compraron libre de impuestos, pasen por el kiosco de aduana con el pasaporte antes de documentar las maletas, y lleven esas compras a la mano."]}
 ];
 
@@ -593,15 +613,37 @@ const AREAS=[
   {t:"Lago Kawaguchi",lat:35.5105,lng:138.7700,water:true},{t:"Fujiyoshida",lat:35.4850,lng:138.8100}
 ];
 const REGIONS={
-  seoul:{bounds:[[37.493,126.950],[37.599,127.080]],minZoom:12,packs:{lo:"tiles-lo.json",15:"tiles-15.json",16:"tiles-16.json"},maps:"kr"},
+  seoul:{bounds:[[37.493,126.915],[37.599,127.080]],minZoom:12,packs:{lo:"tiles-lo.json",15:"tiles-15.json",16:"tiles-16.json"},maps:"kr"},
   kyoto:{bounds:[[34.63,135.62],[35.07,135.90]],minZoom:10,packs:{lo:"tiles-jp-lo.json",15:"tiles-jp-15.json",16:"tiles-jp-16.json"},maps:"jp"},
-  tokyo:{bounds:[[35.60,139.62],[35.76,139.88]],minZoom:11,packs:{lo:"tiles-tk-lo.json",15:"tiles-tk-15.json",16:"tiles-tk-16.json"},maps:"jp"},
+  tokyo:{bounds:[[35.60,139.62],[35.768,139.89]],minZoom:11,packs:{lo:"tiles-tk-lo.json",15:"tiles-tk-15.json",16:"tiles-tk-16.json"},maps:"jp"},
   fuji:{bounds:[[35.38,138.60],[35.60,138.92]],minZoom:10,packs:{lo:"tiles-fj-lo.json",15:"tiles-fj-15.json",16:"tiles-fj-16.json"},maps:"jp"}
 };
 const regionOf=d=>d.region||d.city;
 const CGC_WALK=[[37.5693,126.9780],[37.5691,126.9805],[37.5690,126.9830],[37.5688,126.9858],[37.5689,126.9880]];
 
 
+const HOTELS={
+  seoul:{id:"h-seoul", name:"Apple House Hongdae Yeontral Park", native:"애플 하우스 (서울시 마포구 서강로9길 30)", addr:"서울시 마포구 서강로9길 30", addrEs:"Seogang-ro 9-gil 30, Mapo-gu, Seúl 04061",
+    lat:37.55375, lng:126.93187, phone:"+82 10 7339 5888", kind:"Apartamento · 4 noches · 5 adultos",
+    inT:"Sáb 14 · 4:00–11:00 pm", outT:"Mié 18 · 8:00–11:00 am",
+    how:["<strong>Desde Incheon:</strong> taxi van directo, unos 60–70 minutos. Más barato: tren AREX de todas las paradas hasta Hongik Univ. (unos 50 minutos) y de ahí un taxi corto.","<strong>Al centro</strong> (palacios, Insadong): taxi de 20–25 minutos, o metro línea 2 desde Sinchon.","Estaciones cercanas, a unos 10 minutos a pie: Sinchon y Hongik Univ. (línea 2) y Seogang Univ. (línea Gyeongui)."],
+    info:["Queda en Mapo, entre Hongdae y Sinchon: zona de restaurantes, cafés y vida nocturna.","Avísenle al anfitrión a qué hora llegan el sábado (hacia las 7:00 pm) y que el miércoles salen a las 4:00 am, para saber dónde dejar las llaves.","Tiene cocina, lavadora, purificador de aire y wifi gratis. No hay parking.","No reembolsable. Si hay daños, pueden cobrar hasta ₩100,000 después de la salida."],
+    cost:{l:"Hospedaje, 4 noches",k:733000,cur:"KRW",n:"Incluye impuestos y limpieza (₩40,000)."}},
+  kyoto:{id:"h-kyoto", name:"JPRESERVE Hachijoguchi", native:"JPRESERVE 八条口", addr:"京都市南区東九条西岩本町16-1", addrEs:"Higashikujo Nishiiwamoto-cho 16-1, Minami-ku, Kioto 601-8005",
+    lat:34.98407, lng:135.76365, phone:"+81 90 7342 5757", kind:"Villa de 2 habitaciones · 2 noches · 5 adultos",
+    inT:"Mié 18 · 3:00–9:00 pm", outT:"Vie 20 · hasta las 10:00 am",
+    how:["<strong>Desde la estación de Kioto:</strong> unos 8 minutos a pie por la salida sur (Hachijo, la del shinkansen), o un taxi corto.","Llegan a las 11:30 am y el check-in es a las 3:00 pm: pregúntenle al anfitrión si pueden dejar las maletas antes. Si no, usen los casilleros o el depósito de equipaje del lado Hachijo de la estación."],
+    info:["<strong>Los pisos de arriba son solo por escalera.</strong> Pidan que la abuela duerma abajo.","<strong>Se paga allá:</strong> ¥91,494 con Visa, Mastercard o Discover. Aparte cobran el impuesto de hospedaje de Kioto, por persona y por noche. Desde el 4 de noviembre ya no se puede cancelar gratis.","Tatami, cocineta, lavadora, purificador de aire y wifi gratis. Hay parking gratis cerca."],
+    cost:{l:"Hospedaje, 2 noches",k:91494,cur:"JPY",n:"Se paga en el alojamiento. El impuesto de la ciudad va aparte."}},
+  tokyo:{id:"h-tokyo", name:"Hidaka Stay Villa Shibamata", native:"HIDAKA STAY VILLA 柴又", addr:"東京都葛飾区柴又1-32-2", addrEs:"Shibamata 1-32-2, Katsushika-ku, Tokio 125-0052",
+    lat:35.75742, lng:139.87322, phone:"+81 3 5876 4717", kind:"Casa de 3 habitaciones · 3 noches · 5 adultos",
+    inT:"Vie 20 · desde las 3:00 pm", outT:"Lun 23 · hasta las 11:00 am",
+    how:["<strong>Desde la estación de Tokio:</strong> 2 taxis o un taxi van, unos 35–45 minutos. En tren son unos 50 minutos con 2 transbordos: JR a Ueno, Keisei a Keisei-Takasago y línea Keisei Kanamachi a Shibamata.","La estación Shibamata queda a 2–3 minutos a pie.","<strong>A Asakusa:</strong> tren directo desde Keisei-Takasago por la línea Toei Asakusa, unos 25 minutos en total; en taxi, también unos 25 minutos."],
+    info:["Shibamata es un barrio tradicional al este de Tokio, lejos del centro: cuenten 35–50 minutos a Shibuya o a la Torre de Tokio.","A 6 minutos a pie está el templo Shibamata Taishakuten con su calle de tiendas antiguas; buen plan para la mañana libre del lunes.","Tiene cocina, lavadora, secadora, balcón, tatami y wifi gratis. No hay parking.","No reembolsable. Confirmen con el anfitrión la hora de entrada; en la confirmación aparece como “03:00”."],
+    cost:{l:"Hospedaje, 3 noches",k:89839,cur:"JPY",n:"Incluye impuestos."}}
+};
+const HOTEL_OF={sat:"seoul",sun:"seoul",mon:"seoul",tue:"seoul",wed:"kyoto",thu:"kyoto",fri:"kyoto",fri2:"tokyo",sat2:"tokyo",sun2:"tokyo",mon2:"tokyo"};
+const HOTEL_LABEL={sat:"Llegan hoy",wed:"Llegan hoy",fri:"Salida hoy antes de las 10:00 am",fri2:"Llegan hoy",mon2:"Salida hoy antes de las 11:00 am",tue:"Mañana salen a las 4:00 am"};
 const DATES={sat:"2026-11-14",sun:"2026-11-15",mon:"2026-11-16",tue:"2026-11-17",wed:"2026-11-18",thu:"2026-11-19",fri:"2026-11-20",fri2:"2026-11-20",sat2:"2026-11-21",sun2:"2026-11-22",mon2:"2026-11-23"};
 const CITIES=[{id:"seoul",name:"Seúl",dates:"14–17 nov",country:"kr",tz:"Asia/Seoul"},{id:"kyoto",name:"Kioto",dates:"18–20 nov",country:"jp",tz:"Asia/Tokyo"},{id:"tokyo",name:"Tokio",dates:"20–23 nov",country:"jp",tz:"Asia/Tokyo"}];
 const PHRASES={
@@ -638,6 +680,8 @@ const ICON={
   route:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>',
   car:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
   pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>'
 };
 
@@ -714,7 +758,7 @@ function initMap(){
   const PackLayer=L.GridLayer.extend({ createTile(coords,done){
     const img=document.createElement("img"); img.alt=""; img.setAttribute("role","presentation");
     const key=`${coords.z}/${coords.x}/${coords.y}`;
-    loadPack(packFor(coords.z)).then(p=>{ const d=p[key]; img.src=d?("data:image/webp;base64,"+d):BLANK; img.onload=()=>done(null,img); img.onerror=()=>done(null,img); }).catch(()=>{ img.src=BLANK; done(null,img); });
+    loadPack(packFor(coords.z)).then(p=>{ const d=p[key]; img.onload=()=>done(null,img); img.onerror=()=>{ if(img.src!==BLANK) img.src=BLANK; else done(null,img); }; img.src=d?("data:image/webp;base64,"+d):(coords.z<=16?`https://tile.openstreetmap.org/${coords.z}/${coords.x}/${coords.y}.png`:BLANK); }).catch(()=>{ img.src=BLANK; done(null,img); });
     return img; }});
   baseLayers=[
     new PackLayer({minZoom:10,maxZoom:18,minNativeZoom:10,maxNativeZoom:15,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(map),
@@ -733,6 +777,23 @@ function setRegion(r){
   Promise.all([loadPack(R.packs.lo),loadPack(R.packs[15])]).then(()=>{ if(region===r) $("#mapStatus").hidden=true; loadPack(R.packs[16]); })
     .catch(()=>{$("#mapStatus").textContent="El fondo del mapa no cargó; los puntos sí funcionan.";});
   baseLayers.forEach(l=>l.redraw());
+}
+function hotelRoute(H){ return H===HOTELS.seoul?`https://map.kakao.com/link/to/${encodeURIComponent(H.name)},${H.lat},${H.lng}`:`https://www.google.com/maps/dir/?api=1&destination=${H.lat},${H.lng}&travelmode=transit`; }
+function hotelHTML(d){
+  const key=HOTEL_OF[d.id]; const H=HOTELS[key]; if(!H) return "";
+  const lab=HOTEL_LABEL[d.id];
+  const tel=H.phone.replace(/\s/g,"");
+  const cur=H.cost.cur;
+  return `<div class="hotel" id="hotelCard">
+    <div class="h-top"><span class="h-ico">${ICON.home}</span><div><div class="h-eyebrow">Su hotel${lab?` · <b>${esc(lab)}</b>`:""}</div><h3>${esc(H.name)}</h3><div class="native">${esc(H.addr)}</div><div class="h-addr">${esc(H.addrEs)}</div></div></div>
+    <div class="h-times"><div><span>Entrada</span><b>${esc(H.inT)}</b></div><div><span>Salida</span><b>${esc(H.outT)}</b></div></div>
+    <div class="actions"><a class="btn primary" href="${hotelRoute(H)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a><button class="btn" data-htaxi="${key}">${ICON.car}Taxi</button><a class="btn" href="tel:${tel}">${ICON.phone}Llamar</a>${d.region?"":`<button class="btn" data-hmap="1">${ICON.pin}Mapa</button>`}</div>
+    <details class="more"><summary><span>Cómo llegar y detalles</span><span class="hint">${esc(fmtL(H.cost.k,cur))} · ${esc(usd(H.cost.k,cur))}</span></summary>
+      <div class="h-kind">${esc(H.kind)} · Tel. ${esc(H.phone)}</div>
+      <ul>${H.how.concat(H.info).map(t=>`<li>${t}</li>`).join("")}</ul>
+      <div class="costs">${costHTML({l:H.cost.l,k:H.cost.k,u:"group",cur,n:H.cost.n},{})}</div>
+      <div class="links">${key==="seoul"?`<a class="btn" href="https://map.naver.com/p/search/${encodeURIComponent(H.addr)}" target="_blank" rel="noopener">Naver Map</a>`:""}<a class="btn" href="https://www.google.com/maps/search/?api=1&query=${H.lat},${H.lng}" target="_blank" rel="noopener">Google Maps</a></div>
+    </details></div>`;
 }
 function routeURL(s){
   if(dayOf(s.day).city==="seoul") return `https://map.kakao.com/link/to/${encodeURIComponent(plain(s.ko||s.name))},${s.lat},${s.lng}`;
@@ -769,6 +830,10 @@ function drawMap(refit){
     m.on("popupclose",()=>{ if(selected===s.id && markers[s.id]===m){ selected=null; refreshSel(); } });
     markers[s.id]=m;
   });
+  const H=dayOf(current).region?null:HOTELS[HOTEL_OF[current]];
+  if(H){ const hm=L.marker([H.lat,H.lng],{icon:L.divIcon({className:"",iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15],html:`<div class="pin hotel-pin"><b>${ICON.home}</b><span>Hotel</span></div>`}),title:H.name,zIndexOffset:500}).addTo(map);
+    hm.bindPopup(`<div><div class="pop-time">Su hotel · ${esc(H.inT.split(" · ")[0])} a ${esc(H.outT.split(" · ")[0])}</div><div class="pop-name">${esc(H.name)}</div><div class="pop-ko">${esc(H.addr)}</div><div class="pop-actions"><a class="btn primary" href="${hotelRoute(H)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a><button class="btn" data-hotel="1">Detalles</button></div></div>`,{autoPanPadding:[20,60]});
+    markers[H.id]=hm; }
   $("#nearby").href=nearbyURL(); $("#nearby").innerHTML=ICON.pin+"Dónde estoy";
   if(refit) fitDay(true); else setTimeout(declutter,0);
 }
@@ -840,6 +905,7 @@ function dayHTML(d){
   return `<section style="--c:${d.c}">
     <div class="day-head"><span class="eyebrow">${esc(d.eyebrow)}</span><h2>${esc(d.title)}</h2><p>${esc(d.intro)}</p></div>
     ${d.note?`<div class="note">${esc(d.note)}</div>`:""}
+    ${hotelHTML(d)}
     ${t.usd?`<div class="daycost"><span class="k">Entradas y transporte fijo, los 5</span><span><strong>${localStr(t)}</strong> <span class="usd">≈ ${usdv(t.usd)}</span></span></div>`:""}
     <ol class="stops">${list.map(stopHTML).join("")}</ol></section>`;
 }
@@ -852,6 +918,7 @@ function renderCostTable(){
   $("#rateNote").textContent=`Tipo de cambio: US$1 = ₩${RATES.KRW.toLocaleString("en-US")} (24 oct 2026) y ¥${RATES.JPY} (23 oct 2026).`;
   let rows="", tot=0;
   DAYS.forEach(d=>{ const t=dayTotal(d.id); tot+=t.usd; const [num,sub]=d.sub.split(" · "); rows+=`<tr><td>${d.tab} ${num} <span class="muted">${sub}</span></td><td>${t.usd?localStr(t):"—"}</td><td>${t.usd?usdv(t.usd):"—"}</td><td>${t.usd?usdv(t.usd/5):"—"}</td></tr>`; });
+  Object.values(HOTELS).forEach(H=>{ const u=H.cost.k/RATES[H.cost.cur]; tot+=u; rows+=`<tr class="lodge"><td>Hotel ${esc(H===HOTELS.seoul?"Seúl":H===HOTELS.kyoto?"Kioto":"Tokio")} <span class="muted">${esc(H.cost.l.split(", ")[1])}</span></td><td>${fmtL(H.cost.k,H.cost.cur)}</td><td>${usdv(u)}</td><td>${usdv(u/5)}</td></tr>`; });
   $("#costTable").innerHTML=`<thead><tr><th>Día</th><th>Los 5</th><th>US$</th><th>C/u</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>Total</td><td></td><td>${usdv(tot)}</td><td>${usdv(tot/5)}</td></tr></tfoot>`;
   $("#costSum").textContent=`· ${usdv(tot)} los 5`;
 }
@@ -861,7 +928,7 @@ function setDay(id,refit=true){ current=id; selected=null; try{localStorage.setI
 function refreshSel(){
   document.querySelectorAll(".stop.sel").forEach(n=>n.classList.remove("sel"));
   if(selected){ const n=$("#stop-"+selected); n&&n.classList.add("sel"); }
-  Object.entries(markers).forEach(([id,m])=>{ const s=STOPS.find(x=>x.id===id); m.setIcon(pinIcon(s)); m.setZIndexOffset(selected===id?1000:0); });
+  Object.entries(markers).forEach(([id,m])=>{ const s=STOPS.find(x=>x.id===id); if(!s) return; m.setIcon(pinIcon(s)); m.setZIndexOffset(selected===id?1000:0); });
   setTimeout(declutter,0);
 }
 const wide=()=>matchMedia("(min-width:700px)").matches||matchMedia("(horizontal-viewport-segments: 2)").matches||matchMedia("(vertical-viewport-segments: 2)").matches;
@@ -889,6 +956,9 @@ document.addEventListener("click",e=>{
   else if(b.dataset.show){ showOnMap(b.dataset.show); }
   else if(b.dataset.goto){ gotoCard(b.dataset.goto); }
   else if(b.dataset.taxi){ const s=STOPS.find(x=>x.id===b.dataset.taxi); const nm=nativeOf(s); openShow(s.ja?"ここまでお願いします":"여기로 가주세요", plain(nm), s.addr||(nm.match(/\((.*)\)/)||[])[1]||"", s.name+" · muéstrenle esto al taxista"); }
+  else if(b.dataset.htaxi){ const H=HOTELS[b.dataset.htaxi]; openShow(b.dataset.htaxi==="seoul"?"여기로 가주세요":"ここまでお願いします", H.addr, H.native.split(" (")[0]+" · "+H.phone, H.name+" · muéstrenle esto al taxista"); }
+  else if(b.dataset.hmap){ const H=HOTELS[HOTEL_OF[current]]; if(map&&H){ if(!wide()) $(".map-box").scrollIntoView({behavior:"smooth",block:"center"}); map.flyTo([H.lat,H.lng],16,{duration:.6}); setTimeout(()=>markers[H.id]&&markers[H.id].openPopup(),650); } }
+  else if(b.dataset.hotel){ map&&map.closePopup(); const n=$("#hotelCard"); if(n){ n.querySelector("details").open=true; n.scrollIntoView({behavior:"smooth",block:"start"}); } }
   else if(b.dataset.phr){ const [c,i]=b.dataset.phr.split(":"); const p=PHRASES[c][+i]; openShow("", p[1], p[2], p[0]); }
   else if(b.dataset.copy){ const v=b.dataset.copy; const ok=()=>{b.textContent="Copiado"; setTimeout(()=>b.textContent="Copiar",1500);};
     try{ navigator.clipboard.writeText(v).then(ok,()=>{ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); }); }catch(err){ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); } }
