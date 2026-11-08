@@ -106,6 +106,15 @@ h1{font-family:var(--f-display);font-size:clamp(1.15rem,5vw,1.4rem);margin:0;fon
 .pin span{font:600 12px var(--f-body);color:var(--ink);background:color-mix(in srgb,var(--surface) 90%,transparent);padding:2px 7px;border-radius:7px;box-shadow:0 1px 3px rgb(0 0 0 / .15)}
 .pin.left span{position:absolute;right:34px;top:50%;transform:translateY(-50%)}
 .pin.sel b{transform:scale(1.25)}
+.gpin{will-change:transform}
+.gpin .pin{cursor:pointer}
+.pin.me b{width:22px;height:22px;flex-basis:22px;background:#1A73E8;border:3px solid #fff;box-shadow:0 0 0 7px rgb(26 115 232 / .22),0 1px 4px rgb(0 0 0 / .35)}
+.map-btn.on{color:#1A73E8}
+.map-btn.busy{opacity:.6}
+.gpop{font:14px/1.4 var(--f-body);color:#17212C;min-width:190px}
+.gpop .btn{color:#17212C}
+.gpop .btn.primary{color:#fff}
+.is-google .map-status{top:auto;bottom:12px}
 .pin.sel span{background:var(--ink);color:var(--surface)}
 .pin.next b{box-shadow:0 0 0 4px color-mix(in srgb,var(--now) 45%,transparent),0 2px 6px rgb(0 0 0 / .3)}
 .pin.done b{opacity:.5}
@@ -280,7 +289,8 @@ tfoot td{font-weight:700;border-bottom:0}
       <div class="map-status" id="mapStatus">Cargando mapa…</div>
       <div class="map-tools">
         <button class="map-btn" id="fit">Ver todo el día</button>
-        <a class="map-btn" id="nearby" href="#" target="_blank" rel="noopener">Dónde estoy</a>
+        <button class="map-btn" id="nearby" type="button">Dónde estoy</button>
+        <button class="map-btn" id="mapSwitch" type="button" hidden>Mapa sin internet</button>
       </div>
     </div>
   </div>
@@ -746,37 +756,184 @@ function renderHeader(){
 function setHdr(){ const h=$("#top").getBoundingClientRect().height; document.documentElement.style.setProperty("--hdr",Math.round(h)+"px"); }
 
 /* ---------- map ---------- */
-let map=null, markers={}, routeLayer=null, baseLayers=[];
+/* Google Maps: pega aquí la clave de la API (Maps JavaScript API). Si está vacía o no hay internet, se usa el mapa sin conexión. */
+const GMAPS_KEY="";
+const GMAPS_MAP_ID="DEMO_MAP_ID";
+let map=null, MP=null, mapKind="", meWatch=null, mePos=null;
 const packs={};
 function loadPack(url){ if(!packs[url]) packs[url]=fetch(url).then(r=>{if(!r.ok) throw new Error(r.status); return r.json();}); return packs[url]; }
 function packFor(z){ const R=REGIONS[region]||REGIONS.seoul; return R.packs[z<=14?"lo":String(Math.min(z,16))]; }
 const BLANK="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-function initMap(){
-  if(typeof L==="undefined"){ $("#mapStatus").textContent="El mapa no cargó. Usen los botones de “Cómo llegar”."; return; }
-  map=L.map("map",{zoomControl:true,minZoom:10,maxZoom:18,maxBoundsViscosity:0.8,attributionControl:true,zoomSnap:1,zoomDelta:1,tap:true,fadeAnimation:false});
-  map.attributionControl.setPrefix(false);
+const mapStatus=(t)=>{ const n=$("#mapStatus"); if(!t){ n.hidden=true; return; } n.hidden=false; n.textContent=t; };
+function freshMapEl(){ const old=$("#map"); const n=old.cloneNode(false); n.className=""; n.removeAttribute("style"); old.replaceWith(n); return n; }
+
+/* --- proveedor sin conexión (Leaflet + mapas guardados) --- */
+function leafletProvider(){
+  if(typeof L==="undefined") return null;
+  const el=freshMapEl();
+  const m=L.map(el,{zoomControl:true,minZoom:10,maxZoom:18,maxBoundsViscosity:0.8,attributionControl:true,zoomSnap:1,zoomDelta:1,tap:true,fadeAnimation:false});
+  m.attributionControl.setPrefix(false);
   const PackLayer=L.GridLayer.extend({ createTile(coords,done){
     const img=document.createElement("img"); img.alt=""; img.setAttribute("role","presentation");
     const key=`${coords.z}/${coords.x}/${coords.y}`;
     loadPack(packFor(coords.z)).then(p=>{ const d=p[key]; img.onload=()=>done(null,img); img.onerror=()=>{ if(img.src!==BLANK) img.src=BLANK; else done(null,img); }; img.src=d?("data:image/webp;base64,"+d):(coords.z<=16?`https://tile.openstreetmap.org/${coords.z}/${coords.x}/${coords.y}.png`:BLANK); }).catch(()=>{ img.src=BLANK; done(null,img); });
     return img; }});
-  baseLayers=[
-    new PackLayer({minZoom:10,maxZoom:18,minNativeZoom:10,maxNativeZoom:15,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(map),
-    new PackLayer({minZoom:15.5,maxZoom:18,minNativeZoom:16,maxNativeZoom:16}).addTo(map)];
-  AREAS.forEach(a=>L.marker([a.lat,a.lng],{interactive:false,keyboard:false,icon:L.divIcon({className:"area-label"+(a.water?" water":""),html:a.t,iconSize:null})}).addTo(map));
-  routeLayer=L.layerGroup().addTo(map);
-  const zl=()=>map.getContainer().classList.toggle("zoom-low",map.getZoom()<12); map.on("zoomend",zl); zl();
-  map.on("zoomend moveend",()=>setTimeout(declutter,0));
-  map.on("click",()=>{ if(selected){ selected=null; refreshSel(); } });
-  new ResizeObserver(()=>map.invalidateSize(false)).observe($(".map-box"));
+  const base=[
+    new PackLayer({minZoom:10,maxZoom:18,minNativeZoom:10,maxNativeZoom:15,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(m),
+    new PackLayer({minZoom:15.5,maxZoom:18,minNativeZoom:16,maxNativeZoom:16}).addTo(m)];
+  AREAS.forEach(a=>L.marker([a.lat,a.lng],{interactive:false,keyboard:false,icon:L.divIcon({className:"area-label"+(a.water?" water":""),html:a.t,iconSize:null})}).addTo(m));
+  const layer=L.layerGroup().addTo(m); const mk={}; const cOf={};
+  const zl=()=>m.getContainer().classList.toggle("zoom-low",m.getZoom()<12); m.on("zoomend",zl); zl();
+  m.on("zoomend moveend",()=>setTimeout(declutter,0));
+  m.on("click",()=>{ if(selected){ selected=null; refreshSel(); } });
+  const ro=new ResizeObserver(()=>m.invalidateSize(false)); ro.observe($(".map-box"));
+  const icon=(html,c)=>L.divIcon({className:"",iconSize:[c*2,c*2],iconAnchor:[c,c],popupAnchor:[0,-c],html});
+  map=m;
+  return {kind:"l",
+    destroy(){ ro.disconnect(); m.remove(); },
+    clear(){ m.closePopup(); Object.keys(mk).forEach(id=>{ if(id==="me") return; mk[id].off(); mk[id].remove(); delete mk[id]; }); layer.clearLayers(); },
+    route(pts,color,o){ L.polyline(pts,{color,weight:o.weight||3,opacity:o.opacity??.85,dashArray:o.dash?"7 7":null,interactive:false}).addTo(layer); },
+    marker(id,lat,lng,html,o){ if(mk[id]){ mk[id].off(); mk[id].remove(); }
+      const c=o.c||14; cOf[id]=c;
+      const mm=L.marker([lat,lng],{icon:icon(html,c),riseOnHover:true,title:o.title||"",zIndexOffset:o.z||0,interactive:!!o.popup}).addTo(m);
+      if(o.popup){ mm.bindPopup(o.popup,{closeButton:true,autoPanPadding:[20,60]}); }
+      if(o.onClick) mm.on("click",o.onClick);
+      if(o.onClose) mm.on("popupclose",o.onClose);
+      mk[id]=mm; },
+    move(id,lat,lng){ mk[id]&&mk[id].setLatLng([lat,lng]); },
+    has(id){ return !!mk[id]; },
+    setHTML(id,html,z){ const mm=mk[id]; if(!mm) return; mm.setIcon(icon(html,cOf[id]||14)); mm.setZIndexOffset(z||0); },
+    el(id){ return mk[id]&&mk[id].getElement(); },
+    ids(){ return Object.keys(mk); },
+    open(id){ mk[id]&&mk[id].openPopup(); },
+    close(){ m.closePopup(); },
+    fly(lat,lng,z){ m.flyTo([lat,lng],Math.max(m.getZoom(),z),{duration:.6}); },
+    fit(pts){ m.fitBounds(L.latLngBounds(pts),{paddingTopLeft:[40,70],paddingBottomRight:[110,40],maxZoom:16,animate:true}); },
+    center(lat,lng,z){ m.setView([lat,lng],z); },
+    setRegion(r){ const R=REGIONS[r];
+      m.setMaxBounds(L.latLngBounds(R.bounds).pad(0.15)); m.setMinZoom(R.minZoom);
+      mapStatus("Cargando mapa…");
+      Promise.all([loadPack(R.packs.lo),loadPack(R.packs[15])]).then(()=>{ if(region===r) mapStatus(""); loadPack(R.packs[16]); })
+        .catch(()=>mapStatus("El fondo del mapa no cargó; los puntos sí funcionan."));
+      base.forEach(l=>l.redraw()); }
+  };
 }
-function setRegion(r){
-  if(!map||region===r) return; region=r; const R=REGIONS[r];
-  map.setMaxBounds(L.latLngBounds(R.bounds).pad(0.15)); map.setMinZoom(R.minZoom);
-  $("#mapStatus").hidden=false; $("#mapStatus").textContent="Cargando mapa…";
-  Promise.all([loadPack(R.packs.lo),loadPack(R.packs[15])]).then(()=>{ if(region===r) $("#mapStatus").hidden=true; loadPack(R.packs[16]); })
-    .catch(()=>{$("#mapStatus").textContent="El fondo del mapa no cargó; los puntos sí funcionan.";});
-  baseLayers.forEach(l=>l.redraw());
+
+/* --- Google Maps --- */
+let gmPromise=null;
+function loadGoogle(){
+  if(gmPromise) return gmPromise;
+  gmPromise=new Promise((res,rej)=>{
+    if(!GMAPS_KEY) return rej(new Error("sin clave"));
+    if(navigator.onLine===false) return rej(new Error("sin internet"));
+    const t=setTimeout(()=>rej(new Error("tiempo")),10000);
+    window.__gmReady=()=>{ clearTimeout(t); res(); };
+    window.gm_authFailure=()=>{ gmBroken=true; if(mapKind==="g") useMap("l",true); };
+    const sc=document.createElement("script");
+    sc.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GMAPS_KEY)}&v=weekly&language=es&libraries=marker&loading=async&callback=__gmReady`;
+    sc.async=true; sc.onerror=()=>{ clearTimeout(t); rej(new Error("no cargó")); };
+    document.head.appendChild(sc);
+  }).catch(e=>{ gmPromise=null; throw e; });
+  return gmPromise;
+}
+let gmBroken=false;
+function googleProvider(){
+  const g=google.maps; const el=freshMapEl();
+  const opts={center:{lat:37.56,lng:126.98},zoom:12,mapId:GMAPS_MAP_ID,gestureHandling:"greedy",clickableIcons:false,
+    disableDefaultUI:true,zoomControl:true,streetViewControl:true,fullscreenControl:false,mapTypeControl:false,
+    zoomControlOptions:{position:g.ControlPosition.LEFT_TOP},streetViewControlOptions:{position:g.ControlPosition.LEFT_TOP}};
+  if(g.ColorScheme) opts.colorScheme=g.ColorScheme.FOLLOW_SYSTEM;
+  const m=new g.Map(el,opts);
+  const iw=new g.InfoWindow({maxWidth:280}); let iwId=null;
+  const mk={}, pop={}, closeCb={}; let lines=[];
+  iw.addListener("closeclick",()=>{ const id=iwId; iwId=null; closeCb[id]&&closeCb[id](); });
+  m.addListener("click",()=>{ iw.close(); iwId=null; if(selected){ selected=null; refreshSel(); } });
+  m.addListener("idle",()=>setTimeout(declutter,0));
+  const wrap=(html,c)=>{ const d=document.createElement("div"); d.className="gpin"; d.style.transform=`translate(calc(50% - ${c}px), ${c}px)`; d.innerHTML=html; return d; };
+  const node=(html)=>{ const d=document.createElement("div"); d.className="gpop"; d.innerHTML=html; return d; };
+  map=m;
+  return {kind:"g",
+    destroy(){ iw.close(); Object.values(mk).forEach(x=>x.map=null); lines.forEach(l=>l.setMap(null)); },
+    clear(){ iw.close(); iwId=null; Object.keys(mk).forEach(id=>{ if(id==="me") return; mk[id].map=null; delete mk[id]; delete pop[id]; delete closeCb[id]; }); lines.forEach(l=>l.setMap(null)); lines=[]; },
+    route(pts,color,o){ const path=pts.map(p=>({lat:p[0],lng:p[1]}));
+      const l=o.dash?new g.Polyline({path,map:m,clickable:false,strokeOpacity:0,icons:[{icon:{path:"M 0,-1 0,1",strokeOpacity:o.opacity??.85,strokeColor:color,strokeWeight:o.weight||3,scale:2.5},offset:"0",repeat:"14px"}]})
+        :new g.Polyline({path,map:m,clickable:false,strokeColor:color,strokeOpacity:o.opacity??.85,strokeWeight:o.weight||3});
+      lines.push(l); },
+    marker(id,lat,lng,html,o){ if(mk[id]) mk[id].map=null;
+      const c=o.c||14;
+      const mm=new g.marker.AdvancedMarkerElement({map:m,position:{lat,lng},content:wrap(html,c),title:o.title||"",zIndex:o.z||0,gmpClickable:!!(o.popup||o.onClick)});
+      mm.__c=c;
+      if(o.popup) pop[id]=o.popup; if(o.onClose) closeCb[id]=o.onClose;
+      if(o.popup||o.onClick) mm.addListener("gmp-click",()=>{ o.onClick&&o.onClick(); if(o.popup){ iwId=id; iw.setContent(node(o.popup)); iw.open({anchor:mm,map:m}); } });
+      mk[id]=mm; },
+    move(id,lat,lng){ if(mk[id]) mk[id].position={lat,lng}; },
+    has(id){ return !!mk[id]; },
+    setHTML(id,html,z){ const mm=mk[id]; if(!mm) return; mm.content=wrap(html,mm.__c||14); mm.zIndex=z||0; },
+    el(id){ return mk[id]&&mk[id].content; },
+    ids(){ return Object.keys(mk); },
+    open(id){ const mm=mk[id]; if(!mm||!pop[id]) return; iwId=id; iw.setContent(node(pop[id])); iw.open({anchor:mm,map:m}); },
+    close(){ iw.close(); iwId=null; },
+    fly(lat,lng,z){ m.panTo({lat,lng}); if((m.getZoom()||0)<z) setTimeout(()=>m.setZoom(z),350); },
+    fit(pts){ const b=new g.LatLngBounds(); pts.forEach(p=>b.extend({lat:p[0],lng:p[1]}));
+      if(pts.length===1){ m.setCenter(b.getCenter()); m.setZoom(15); return; }
+      m.fitBounds(b,{top:70,left:56,right:120,bottom:40});
+      g.event.addListenerOnce(m,"idle",()=>{ if(m.getZoom()>16) m.setZoom(16); }); },
+    center(lat,lng,z){ m.setCenter({lat,lng}); m.setZoom(z); },
+    setRegion(){ mapStatus(""); }
+  };
+}
+
+/* --- elegir proveedor --- */
+function setMapBtns(){
+  const sw=$("#mapSwitch"); if(!sw) return;
+  const canG=!!GMAPS_KEY&&!gmBroken;
+  sw.hidden=!canG;
+  sw.textContent=mapKind==="g"?"Mapa sin internet":"Google Maps";
+  $(".map-box").classList.toggle("is-google",mapKind==="g");
+}
+function useMap(kind,refit){
+  try{ MP&&MP.destroy(); }catch(e){}
+  MP=null; map=null; region=null;
+  if(kind==="g"){ try{ MP=googleProvider(); }catch(e){ MP=null; } }
+  if(!MP){ MP=leafletProvider(); kind=MP?"l":""; }
+  mapKind=kind;
+  if(!MP){ mapStatus("El mapa no cargó. Usen los botones de “Cómo llegar”."); return; }
+  if(kind==="g") mapStatus("");
+  if(mePos) showMe(mePos,false);
+  setMapBtns(); drawMap(false); fitDay(false);
+  if(refit) fitDay(true);
+}
+function initMap(){
+  let pref=""; try{ pref=localStorage.getItem("map-kind")||""; }catch(e){}
+  if(GMAPS_KEY && pref!=="l"){
+    mapStatus("Cargando Google Maps…");
+    useMap("l");
+    loadGoogle().then(()=>useMap("g")).catch(()=>{ mapStatus(""); setMapBtns(); });
+  } else useMap("l");
+}
+function setRegion(r){ if(!MP||region===r) return; region=r; MP.setRegion(r); }
+
+/* --- mi ubicación --- */
+function showMe(p,fly){
+  mePos=p; if(!MP) return;
+  const html=`<div class="pin me"><b></b></div>`;
+  if(MP.has("me")) MP.move("me",p.lat,p.lng); else MP.marker("me",p.lat,p.lng,html,{c:11,z:2000,title:"Ustedes están aquí"});
+  if(fly) MP.fly(p.lat,p.lng,15);
+}
+function locate(){
+  const b=$("#nearby");
+  if(!navigator.geolocation){ window.open(nearbyURL(),"_blank","noopener"); return; }
+  if(mePos){ if(!wide()) $(".map-box").scrollIntoView({behavior:"smooth",block:"center"}); MP&&MP.fly(mePos.lat,mePos.lng,15); }
+  b.classList.add("busy");
+  let first=!mePos;
+  if(meWatch===null) meWatch=navigator.geolocation.watchPosition(pos=>{
+      b.classList.remove("busy"); b.classList.add("on");
+      showMe({lat:pos.coords.latitude,lng:pos.coords.longitude},first); first=false;
+    },err=>{ b.classList.remove("busy"); navigator.geolocation.clearWatch(meWatch); meWatch=null;
+      if(err.code===1) mapStatus("Permitan la ubicación en el navegador para ver dónde están.");
+      else window.open(nearbyURL(),"_blank","noopener");
+      setTimeout(()=>mapStatus(""),4000);
+    },{enableHighAccuracy:true,maximumAge:15000,timeout:15000});
 }
 function hotelRoute(H){ return H===HOTELS.seoul?`https://map.kakao.com/link/to/${encodeURIComponent(H.name)},${H.lat},${H.lng}`:`https://www.google.com/maps/dir/?api=1&destination=${H.lat},${H.lng}&travelmode=transit`; }
 function hotelHTML(d){
@@ -803,10 +960,9 @@ function nearbyURL(){
   const d=dayOf(current);
   return d.city==="seoul"?"https://map.kakao.com/":"https://www.google.com/maps/@?api=1&map_action=map";
 }
-function pinIcon(s){
+function pinHTML(s){
   const d=dayOf(s.day); const cls=["pin"]; if(s.labelLeft) cls.push("left"); if(selected===s.id) cls.push("sel"); if(store[s.id]) cls.push("done"); if(NOW.next&&NOW.next.id===s.id) cls.push("next");
-  return L.divIcon({className:"",iconSize:[28,28],iconAnchor:[14,14],popupAnchor:[0,-14],
-    html:`<div class="${cls.join(" ")}" style="--c:${d.c}"><b>${numbered[s.id]}</b><span>${esc(shortName(s))}</span></div>`});
+  return `<div class="${cls.join(" ")}" style="--c:${d.c}"><b>${numbered[s.id]}</b><span>${esc(shortName(s))}</span></div>`;
 }
 function popupHTML(s){
   const d=dayOf(s.day);
@@ -817,41 +973,38 @@ function popupHTML(s){
 }
 function getCss(v){ const m=v.match(/var\((--[^)]+)\)/); return m?getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim():v; }
 function drawMap(refit){
-  if(!map) return;
+  if(!MP) return;
   setRegion(regionOf(dayOf(current)));
-  map.closePopup(); const old=markers; markers={}; Object.values(old).forEach(m=>{m.off(); m.remove();}); routeLayer.clearLayers();
-  const list=STOPS.filter(s=>s.day===current && !s.noMap); const d=dayOf(current);
-  if(list.length>1) L.polyline(list.map(s=>[s.lat,s.lng]),{color:getCss(d.c),weight:3,opacity:.85,dashArray:"7 7",interactive:false}).addTo(routeLayer);
-  if(current==="mon") L.polyline(CGC_WALK,{color:getCss(d.c),weight:8,opacity:.35,interactive:false}).addTo(routeLayer);
+  MP.clear();
+  const list=STOPS.filter(s=>s.day===current && !s.noMap); const d=dayOf(current); const col=getCss(d.c);
+  if(list.length>1) MP.route(list.map(s=>[s.lat,s.lng]),col,{dash:true});
+  if(current==="mon") MP.route(CGC_WALK,col,{weight:8,opacity:.35});
   list.forEach(s=>{
-    const m=L.marker([s.lat,s.lng],{icon:pinIcon(s),riseOnHover:true,title:s.name,zIndexOffset:selected===s.id?1000:0}).addTo(map);
-    m.bindPopup(popupHTML(s),{closeButton:true,autoPanPadding:[20,60]});
-    m.on("click",()=>{ selected=s.id; refreshSel(); });
-    m.on("popupclose",()=>{ if(selected===s.id && markers[s.id]===m){ selected=null; refreshSel(); } });
-    markers[s.id]=m;
+    MP.marker(s.id,s.lat,s.lng,pinHTML(s),{title:s.name,z:selected===s.id?1000:0,popup:popupHTML(s),
+      onClick:()=>{ selected=s.id; refreshSel(); },
+      onClose:()=>{ if(selected===s.id){ selected=null; refreshSel(); } }});
   });
   const H=dayOf(current).region?null:HOTELS[HOTEL_OF[current]];
-  if(H){ const hm=L.marker([H.lat,H.lng],{icon:L.divIcon({className:"",iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15],html:`<div class="pin hotel-pin"><b>${ICON.home}</b><span>Hotel</span></div>`}),title:H.name,zIndexOffset:500}).addTo(map);
-    hm.bindPopup(`<div><div class="pop-time">Su hotel · ${esc(H.inT.split(" · ")[0])} a ${esc(H.outT.split(" · ")[0])}</div><div class="pop-name">${esc(H.name)}</div><div class="pop-ko">${esc(H.addr)}</div><div class="pop-actions"><a class="btn primary" href="${hotelRoute(H)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a><button class="btn" data-hotel="1">Detalles</button></div></div>`,{autoPanPadding:[20,60]});
-    markers[H.id]=hm; }
-  $("#nearby").href=nearbyURL(); $("#nearby").innerHTML=ICON.pin+"Dónde estoy";
+  if(H) MP.marker(H.id,H.lat,H.lng,`<div class="pin hotel-pin"><b>${ICON.home}</b><span>Hotel</span></div>`,{c:15,z:500,title:H.name,
+    popup:`<div><div class="pop-time">Su hotel · ${esc(H.inT.split(" · ")[0])} a ${esc(H.outT.split(" · ")[0])}</div><div class="pop-name">${esc(H.name)}</div><div class="pop-ko">${esc(H.addr)}</div><div class="pop-actions"><a class="btn primary" href="${hotelRoute(H)}" target="_blank" rel="noopener">${ICON.route}Cómo llegar</a><button class="btn" data-hotel="1">Detalles</button></div></div>`});
   if(refit) fitDay(true); else setTimeout(declutter,0);
 }
-function fitDay(anim){
-  if(!map) return;
+function fitDay(){
+  if(!MP) return;
   const list=STOPS.filter(s=>s.day===current && !s.noMap);
-  if(!list.length){ const b=L.latLngBounds(REGIONS[regionOf(dayOf(current))].bounds); map.setView(b.getCenter(),12,{animate:anim}); return; }
-  map.fitBounds(L.latLngBounds(list.map(s=>[s.lat,s.lng])),{paddingTopLeft:[40,70],paddingBottomRight:[110,40],maxZoom:16,animate:anim});
+  if(!list.length){ const b=REGIONS[regionOf(dayOf(current))].bounds; MP.center((b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2,12); return; }
+  MP.fit(list.map(s=>[s.lat,s.lng]));
 }
 function declutter(){
-  if(!map) return;
-  const ids=Object.keys(markers);
-  const circles=ids.map(id=>{const e=markers[id].getElement(); const b=e&&e.querySelector(".pin b"); return b?{id,r:b.getBoundingClientRect()}:null;}).filter(Boolean);
+  if(!MP) return;
+  const ids=MP.ids().filter(id=>id!=="me");
+  const circles=ids.map(id=>{const e=MP.el(id); const b=e&&e.querySelector(".pin b"); return b?{id,r:b.getBoundingClientRect()}:null;}).filter(Boolean);
   const hit=(a,b)=>!(a.right+2<b.left||b.right+2<a.left||a.bottom+2<b.top||b.bottom+2<a.top);
   const kept=[];
   [...ids].sort((a,b)=>(b===selected)-(a===selected)).forEach(id=>{
-    const e=markers[id].getElement(); const sp=e&&e.querySelector(".pin span"); if(!sp) return;
+    const e=MP.el(id); const sp=e&&e.querySelector(".pin span"); if(!sp) return;
     sp.style.visibility="visible"; const r=sp.getBoundingClientRect();
+    if(!r.width) return;
     const clash=id!==selected && (kept.some(k=>hit(k,r)) || circles.some(c=>c.id!==id && hit(c.r,r)));
     if(clash) sp.style.visibility="hidden"; else kept.push(r);
   });
@@ -928,21 +1081,21 @@ function setDay(id,refit=true){ current=id; selected=null; try{localStorage.setI
 function refreshSel(){
   document.querySelectorAll(".stop.sel").forEach(n=>n.classList.remove("sel"));
   if(selected){ const n=$("#stop-"+selected); n&&n.classList.add("sel"); }
-  Object.entries(markers).forEach(([id,m])=>{ const s=STOPS.find(x=>x.id===id); if(!s) return; m.setIcon(pinIcon(s)); m.setZIndexOffset(selected===id?1000:0); });
+  if(MP) MP.ids().forEach(id=>{ const s=STOPS.find(x=>x.id===id); if(!s) return; MP.setHTML(id,pinHTML(s),selected===id?1000:0); });
   setTimeout(declutter,0);
 }
 const wide=()=>matchMedia("(min-width:700px)").matches||matchMedia("(horizontal-viewport-segments: 2)").matches||matchMedia("(vertical-viewport-segments: 2)").matches;
 function showOnMap(id){
-  const s=STOPS.find(x=>x.id===id); if(!s||!map||s.noMap) return;
+  const s=STOPS.find(x=>x.id===id); if(!s||!MP||s.noMap) return;
   if(s.day!==current){ current=s.day; renderAll(false); }
   selected=id; refreshSel();
   if(!wide()) $(".map-box").scrollIntoView({behavior:"smooth",block:"center"});
-  map.flyTo([s.lat,s.lng],Math.max(map.getZoom(),16),{duration:.6});
-  setTimeout(()=>markers[id]&&markers[id].openPopup(),650);
+  MP.fly(s.lat,s.lng,16);
+  setTimeout(()=>MP&&MP.open(id),700);
 }
 function gotoCard(id){
   const s=STOPS.find(x=>x.id===id); if(s&&s.day!==current){ current=s.day; renderAll(false); }
-  map&&map.closePopup(); selected=id; refreshSel();
+  MP&&MP.close(); selected=id; refreshSel();
   const n=$("#stop-"+id); if(n) n.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function openShow(ask,big,sub,es){ $("#s-ask").textContent=ask; $("#s-big").textContent=big; $("#s-sub").textContent=sub||""; $("#s-es").textContent=es||""; $("#show").hidden=false; $("#s-close").focus(); }
@@ -957,20 +1110,25 @@ document.addEventListener("click",e=>{
   else if(b.dataset.goto){ gotoCard(b.dataset.goto); }
   else if(b.dataset.taxi){ const s=STOPS.find(x=>x.id===b.dataset.taxi); const nm=nativeOf(s); openShow(s.ja?"ここまでお願いします":"여기로 가주세요", plain(nm), s.addr||(nm.match(/\((.*)\)/)||[])[1]||"", s.name+" · muéstrenle esto al taxista"); }
   else if(b.dataset.htaxi){ const H=HOTELS[b.dataset.htaxi]; openShow(b.dataset.htaxi==="seoul"?"여기로 가주세요":"ここまでお願いします", H.addr, H.native.split(" (")[0]+" · "+H.phone, H.name+" · muéstrenle esto al taxista"); }
-  else if(b.dataset.hmap){ const H=HOTELS[HOTEL_OF[current]]; if(map&&H){ if(!wide()) $(".map-box").scrollIntoView({behavior:"smooth",block:"center"}); map.flyTo([H.lat,H.lng],16,{duration:.6}); setTimeout(()=>markers[H.id]&&markers[H.id].openPopup(),650); } }
-  else if(b.dataset.hotel){ map&&map.closePopup(); const n=$("#hotelCard"); if(n){ n.querySelector("details").open=true; n.scrollIntoView({behavior:"smooth",block:"start"}); } }
+  else if(b.dataset.hmap){ const H=HOTELS[HOTEL_OF[current]]; if(MP&&H){ if(!wide()) $(".map-box").scrollIntoView({behavior:"smooth",block:"center"}); MP.fly(H.lat,H.lng,16); setTimeout(()=>MP&&MP.open(H.id),700); } }
+  else if(b.dataset.hotel){ MP&&MP.close(); const n=$("#hotelCard"); if(n){ n.querySelector("details").open=true; n.scrollIntoView({behavior:"smooth",block:"start"}); } }
   else if(b.dataset.phr){ const [c,i]=b.dataset.phr.split(":"); const p=PHRASES[c][+i]; openShow("", p[1], p[2], p[0]); }
   else if(b.dataset.copy){ const v=b.dataset.copy; const ok=()=>{b.textContent="Copiado"; setTimeout(()=>b.textContent="Copiar",1500);};
     try{ navigator.clipboard.writeText(v).then(ok,()=>{ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); }); }catch(err){ const r=document.createRange(); r.selectNodeContents(b.previousElementSibling); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); } }
 });
-$("#fit").onclick=()=>{ map&&map.closePopup(); fitDay(true); };
+$("#fit").onclick=()=>{ MP&&MP.close(); fitDay(true); };
+$("#nearby").innerHTML=ICON.pin+"Dónde estoy"; $("#nearby").onclick=locate;
+$("#mapSwitch").onclick=()=>{ const k=mapKind==="g"?"l":"g"; try{localStorage.setItem("map-kind",k);}catch(e){}
+  if(k==="g"){ mapStatus("Cargando Google Maps…"); loadGoogle().then(()=>useMap("g",true)).catch(()=>mapStatus("Google Maps no cargó; sigan con este mapa.")); }
+  else useMap("l",true); };
+addEventListener("offline",()=>{ if(mapKind==="g") useMap("l"); });
 $("#s-close").onclick=()=>{$("#show").hidden=true;};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#show").hidden=true;});
 new ResizeObserver(setHdr).observe($("#top"));
 
 renderNow();
 if(NOW.day) current=NOW.day.id;
-initMap(); renderCostTable(); renderAll(false); fitDay(false);
+renderCostTable(); renderAll(false); initMap();
 setInterval(()=>{ const prev=NOW.next&&NOW.next.id; renderNow(); if((NOW.next&&NOW.next.id)!==prev){ $("#list").innerHTML=dayHTML(dayOf(current)); refreshSel(); renderHeader(); } },60000);
 })();
 </script>
